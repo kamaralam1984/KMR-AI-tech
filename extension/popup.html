@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>KMR AI Page Agent</title>
+    <link rel="stylesheet" href="ui.css" />
+  </head>
+  <body>
+    <main>
+      <h1>KMR AI Page Agent</h1>
+      <p class="muted">
+        Looks at this tab and highlights problems. It never clicks, types or submits. Personal data
+        is redacted in your browser first.
+      </p>
+      <p id="status" role="status" aria-live="polite">Off for this tab.</p>
+      <div class="row">
+        <button id="on" type="button" class="primary">Turn on for this tab</button>
+        <button id="analyze" type="button" disabled>Analyze this page</button>
+      </div>
+      <div class="row">
+        <button id="preview" type="button" disabled>Show what will be sent</button>
+        <button id="off" type="button" disabled>Turn off</button>
+      </div>
+      <pre id="preview-text" hidden></pre>
+      <p><a id="options" href="options.html" target="_blank" rel="noreferrer">Settings</a></p>
+    </main>
+    <script src="popup.js"></script>
+  </body>
+</html>

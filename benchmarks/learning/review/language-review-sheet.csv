@@ -1,0 +1,10 @@
+id,category,age_band,language,question,answer_shown,steps,notes,correct (Y/N),clear_for_age (Y/N),level_suitable (Y/N),wording_natural (Y/N/NA),comments
+hinglish-029,hinglish,12-14,hinglish,12 guna 7 kitna hota hai,84,Step 1: 12 × 7 = 84,Mujhse galti ho sakti hai. Zaroori answers apne teacher ya book se check kar lo.,,,,,
+hinglish-030,hinglish,9-11,hinglish,12 jodo 7,19,Step 1: 12 + 7 = 19,Mujhse galti ho sakti hai. Zaroori answers apne teacher ya book se check kar lo.,,,,,
+hinglish-031,hinglish,12-14,hinglish,9 guna 9 kitna hota hai,81,Step 1: 9 × 9 = 81,Mujhse galti ho sakti hai. Zaroori answers apne teacher ya book se check kar lo.,,,,,
+hinglish-032,hinglish,9-11,hinglish,9 jodo 9,18,Step 1: 9 + 9 = 18,Mujhse galti ho sakti hai. Zaroori answers apne teacher ya book se check kar lo.,,,,,
+hinglish-033,hinglish,12-14,hinglish,15 guna 4 kitna hota hai,60,Step 1: 15 × 4 = 60,Mujhse galti ho sakti hai. Zaroori answers apne teacher ya book se check kar lo.,,,,,
+hinglish-034,hinglish,9-11,hinglish,15 jodo 4,19,Step 1: 15 + 4 = 19,Mujhse galti ho sakti hai. Zaroori answers apne teacher ya book se check kar lo.,,,,,
+hindi-035,hindi,12-14,hi,12 × 7 कितना है,84,चरण 1: 12 × 7 = 84,मुझसे गलती हो सकती है। ज़रूरी उत्तर अपने शिक्षक या किताब से जाँच लें।,,,,,
+hindi-036,hindi,12-14,hi,8 × 5 कितना है,40,चरण 1: 8 × 5 = 40,मुझसे गलती हो सकती है। ज़रूरी उत्तर अपने शिक्षक या किताब से जाँच लें।,,,,,
+answer_check-058,answer_check,12-14,hinglish,12 x 7 = 84 sahi hai?,84,Step 1: 12 × 7 = 84,Mujhse galti ho sakti hai. Zaroori answers apne teacher ya book se check kar lo.,,,,,

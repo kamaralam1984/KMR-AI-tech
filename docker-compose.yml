@@ -1,0 +1,97 @@
+# Local development services only. Application code runs on the host, not in containers.
+# Ports are bound to 127.0.0.1 and chosen to avoid clashing with other local stacks.
+name: kmr-ai
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${KMR_POSTGRES_USER:-kmr}
+      POSTGRES_PASSWORD: ${KMR_POSTGRES_PASSWORD:?Set KMR_POSTGRES_PASSWORD in .env (copy .env.example)}
+      POSTGRES_DB: ${KMR_POSTGRES_DB:-kmr_dev}
+    ports:
+      - "127.0.0.1:${KMR_POSTGRES_PORT:-55432}:5432"
+    volumes:
+      - kmr_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    ports:
+      - "127.0.0.1:${KMR_REDIS_PORT:-56379}:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # --- Scanner sandbox (profile "scanner": `make scanner-up`) ---------------------------------
+  # scan-net is an internal network: containers on it have no route to the internet or the host.
+  # The browser lives only there. The proxy sits on scan-net AND on the normal network, so every
+  # byte the browser sends or receives passes through the proxy's address checks.
+  scan-proxy:
+    profiles: ["scanner"]
+    image: python:3.12-slim
+    command: ["python", "-u", "/srv/egress_proxy.py"]
+    environment:
+      KMR_PROXY_LISTEN: "0.0.0.0:3128"
+      KMR_APP_ENV: ${KMR_APP_ENV:-local}
+      PYTHONDONTWRITEBYTECODE: "1"
+    volumes:
+      - ./backend/app/scanning/egress_proxy.py:/srv/egress_proxy.py:ro
+      - ./backend/app/scanning/net_policy.py:/srv/net_policy.py:ro
+    networks:
+      scan-net:
+        ipv4_address: 172.31.250.11
+      egress: {}
+    user: "65534:65534"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    pids_limit: 128
+    mem_limit: 256m
+    restart: unless-stopped
+
+  scan-browser:
+    profiles: ["scanner"]
+    build: ./docker/scanner-browser
+    image: kmr-scan-browser:1.64.0
+    environment:
+      PROXY_URL: "http://172.31.250.11:3128"
+      SCAN_WS_PATH: ${KMR_SCAN_BROWSER_PATH:?Set KMR_SCAN_BROWSER_PATH in .env (copy .env.example)}
+      # Optional second engine. Empty = Firefox is not started.
+      SCAN_WS_PATH_FIREFOX: ${KMR_SCAN_BROWSER_PATH_FIREFOX:-}
+    depends_on: [scan-proxy]
+    networks:
+      scan-net:
+        ipv4_address: 172.31.250.10
+    init: true
+    read_only: true
+    tmpfs:
+      - /tmp:size=256m
+      - /home/pwuser:size=256m,uid=1001,gid=1001,mode=0700
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    pids_limit: 512
+    mem_limit: 1536m
+    cpus: 1.5
+    shm_size: 512m
+    restart: unless-stopped
+
+networks:
+  scan-net:
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 172.31.250.0/24
+  egress:
+    driver: bridge
+
+volumes:
+  kmr_postgres_data:

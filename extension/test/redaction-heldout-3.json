@@ -1,0 +1,575 @@
+{
+ "version": 3,
+ "note": "Fresh set, written after tuning on sets 1 and 2 and measured ONCE before any further change. Do not tune against it; start a new file.",
+ "cases": [
+  {
+   "expect": "leak",
+   "category": "name",
+   "text": "Booking confirmed for Siddharth Rao on 5 May",
+   "must_not_contain": [
+    "Siddharth Rao"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "name",
+   "text": "Please forward this to Dr. Farhan Ali today",
+   "must_not_contain": [
+    "Farhan Ali"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "name",
+   "text": "Candidate: Bhavna Trivedi, roll 2210",
+   "must_not_contain": [
+    "Bhavna Trivedi"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "name",
+   "text": "Kindly contact Mahesh Babu for details",
+   "must_not_contain": [
+    "Mahesh Babu"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "name",
+   "text": "The complaint was filed by Zoya Khan",
+   "must_not_contain": [
+    "Zoya Khan"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "name",
+   "text": "Yours faithfully, Nitin Gokhale",
+   "must_not_contain": [
+    "Nitin Gokhale"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "name",
+   "text": "Hi Team, Karthik here",
+   "must_not_contain": [
+    "Karthik"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "name",
+   "text": "Shri Mukesh Agrawal inaugurated the centre",
+   "must_not_contain": [
+    "Mukesh Agrawal"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "name",
+   "text": "Rekha Pandey emailed the principal",
+   "must_not_contain": [
+    "Rekha Pandey"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "name",
+   "text": "Winner: Jasmine D'Souza",
+   "must_not_contain": [
+    "Jasmine D'Souza"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "name",
+   "text": "Referred by uncle Balraj Gill",
+   "must_not_contain": [
+    "Balraj Gill"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "name",
+   "text": "Owner name - Tarun Bhatia",
+   "must_not_contain": [
+    "Tarun Bhatia"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "name",
+   "text": "aditi verma has applied",
+   "must_not_contain": [
+    "aditi verma"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "name",
+   "text": "Ms Kiran Bedi will attend",
+   "must_not_contain": [
+    "Kiran Bedi"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "address",
+   "text": "Courier to B-204 Rose Garden Society Andheri East",
+   "must_not_contain": [
+    "B-204",
+    "Rose Garden Society"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "address",
+   "text": "We are at 56 MG Road, Indore",
+   "must_not_contain": [
+    "56 MG Road"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "address",
+   "text": "Landmark: behind City Mall, Sector 18, Noida",
+   "must_not_contain": [
+    "City Mall",
+    "Sector 18"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "address",
+   "text": "H.No 12-3-45 Banjara Hills Hyderabad",
+   "must_not_contain": [
+    "12-3-45"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "address",
+   "text": "Her flat is number 9, Ashoka Towers",
+   "must_not_contain": [
+    "Ashoka Towers"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "pin",
+   "text": "City Ranchi 834001 Jharkhand",
+   "must_not_contain": [
+    "834001"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "pin",
+   "text": "PIN code 400053",
+   "must_not_contain": [
+    "400053"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "dob",
+   "text": "Birthday: 29 February 1996",
+   "must_not_contain": [
+    "29 February 1996"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "dob",
+   "text": "Her date of birth is 11/11/2002",
+   "must_not_contain": [
+    "11/11/2002"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "dob",
+   "text": "Student was born on 1st Sept 2008",
+   "must_not_contain": [
+    "Sept 2008"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "phone",
+   "text": "Reach Mr Das at 99887 76655",
+   "must_not_contain": [
+    "99887 76655"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "phone",
+   "text": "emergency: +1 (212) 555-0198",
+   "must_not_contain": [
+    "555-0198"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "phone",
+   "text": "Fax 011-4123-4567",
+   "must_not_contain": [
+    "4123-4567"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "phone",
+   "text": "mobile no 8123456789 verified",
+   "must_not_contain": [
+    "8123456789"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "email",
+   "text": "contact : first.last@subdomain.example.co.uk",
+   "must_not_contain": [
+    "first.last@subdomain.example.co.uk"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "email",
+   "text": "mail me at ravi [at] example [dot] com",
+   "must_not_contain": [
+    "ravi [at] example"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "email",
+   "text": "Reply to: ADMIN@EXAMPLE.ORG",
+   "must_not_contain": [
+    "ADMIN@EXAMPLE.ORG"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "id",
+   "text": "Aadhaar no 2345 6789 0123",
+   "must_not_contain": [
+    "2345 6789 0123"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "id",
+   "text": "PAN card BNZPM2501F attached",
+   "must_not_contain": [
+    "BNZPM2501F"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "id",
+   "text": "Passport P7654321 issued Delhi",
+   "must_not_contain": [
+    "P7654321"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "id",
+   "text": "Roll number MH12AB9876 vehicle",
+   "must_not_contain": [
+    "MH12AB9876"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "id",
+   "text": "SSN: 987-65-4321",
+   "must_not_contain": [
+    "987-65-4321"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "id",
+   "text": "IFSC SBIN0004321 branch",
+   "must_not_contain": [
+    "SBIN0004321"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "card",
+   "text": "Visa 4012 8888 8888 1881 charged",
+   "must_not_contain": [
+    "4012 8888 8888 1881"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "card",
+   "text": "Amex 3714 496353 98431",
+   "must_not_contain": [
+    "3714 496353 98431"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "token",
+   "text": "Authorization: Basic dXNlcjpwYXNzd29yZA==",
+   "must_not_contain": [
+    "dXNlcjpwYXNzd29yZA=="
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "token",
+   "text": "client_secret=Zx9Yw8Vv7Uu6Tt5Ss4Rr3Qq2Pp1Oo0",
+   "must_not_contain": [
+    "Zx9Yw8Vv7Uu6Tt5Ss4Rr3Qq2Pp1Oo0"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "token",
+   "text": "slack @@SLACK_TOKEN@@",
+   "must_not_contain": [
+    "@@SLACK_TOKEN@@"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "otp",
+   "text": "Your login code is 604417",
+   "must_not_contain": [
+    "604417"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "otp",
+   "text": "PIN: 2468",
+   "must_not_contain": [
+    "2468"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "user",
+   "text": "handle: priyanka_dance",
+   "must_not_contain": [
+    "priyanka_dance"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "user",
+   "text": "Posted by @the_real_vikas",
+   "must_not_contain": [
+    "the_real_vikas"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "ip",
+   "text": "Client address 10.20.30.40",
+   "must_not_contain": [
+    "10.20.30.40"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "spelled",
+   "text": "my phone is nine nine eight eight seven seven six six five five",
+   "must_not_contain": [
+    "nine nine eight eight"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "hinglish",
+   "text": "Suresh ne mujhe call kiya tha",
+   "must_not_contain": [
+    "Suresh"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "hinglish",
+   "text": "Mera email id hai amit_k@gmail.com",
+   "must_not_contain": [
+    "amit_k@gmail.com"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "url",
+   "text": "See https://shop.example.com/orders?customer=alice&email=a@b.com",
+   "must_not_contain": [
+    "alice",
+    "a@b.com"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "url",
+   "text": "Account page https://example.com/users/ravi.kumar/settings",
+   "must_not_contain": [
+    "ravi.kumar"
+   ]
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Add to wishlist",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Compare products",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Rated 4.8 stars",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "In stock",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Out of stock",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Estimated delivery: 2 to 4 days",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Use code SAVE10 at checkout",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Select a payment method",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Order number is shown on your receipt",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Your download will begin shortly",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Press Enter to search",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Connection timed out after 30 seconds",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "404 - this page could not be found",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Image failed to load",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Subscribe to get updates",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "New arrivals for Spring",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Men's shoes, women's shoes and kids",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "The quick brown fox jumps over the lazy dog",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Table of contents",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Chapter 4: Fractions",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Question 7 of 20",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Time left 12:45",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Score: 18/20",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Grade 5 mathematics",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Hindi and English medium",
+   "must_not_contain": []
+  }
+ ]
+}

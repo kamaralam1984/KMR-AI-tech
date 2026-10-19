@@ -1,0 +1,317 @@
+{
+  "by_expected_severity": {
+    "high": {
+      "expected": 27,
+      "recall": 1.0,
+      "scenario_level_matched": 27
+    },
+    "info": {
+      "expected": 21,
+      "recall": 1.0,
+      "scenario_level_matched": 21
+    },
+    "low": {
+      "expected": 20,
+      "recall": 1.0,
+      "scenario_level_matched": 20
+    },
+    "medium": {
+      "expected": 68,
+      "recall": 0.9853,
+      "scenario_level_matched": 67
+    }
+  },
+  "by_tag": {
+    "accessibility": {
+      "passed": 20,
+      "precision": 1.0,
+      "recall": 1.0,
+      "scenarios": 20
+    },
+    "ambiguous": {
+      "passed": 12,
+      "precision": 1.0,
+      "recall": 1.0,
+      "scenarios": 12
+    },
+    "auth": {
+      "passed": 12,
+      "precision": 1.0,
+      "recall": 1.0,
+      "scenarios": 12
+    },
+    "backend_api": {
+      "passed": 50,
+      "precision": 1.0,
+      "recall": 1.0,
+      "scenarios": 50
+    },
+    "clean": {
+      "passed": 13,
+      "precision": 1.0,
+      "recall": 1.0,
+      "scenarios": 13
+    },
+    "content": {
+      "passed": 8,
+      "precision": 1.0,
+      "recall": 1.0,
+      "scenarios": 8
+    },
+    "database": {
+      "passed": 8,
+      "precision": 1.0,
+      "recall": 1.0,
+      "scenarios": 8
+    },
+    "frontend": {
+      "passed": 35,
+      "precision": 1.0,
+      "recall": 1.0,
+      "scenarios": 35
+    },
+    "injection": {
+      "passed": 8,
+      "precision": 1.0,
+      "recall": 1.0,
+      "scenarios": 8
+    },
+    "multi": {
+      "passed": 7,
+      "precision": 1.0,
+      "recall": 1.0,
+      "scenarios": 7
+    },
+    "network": {
+      "passed": 6,
+      "precision": 1.0,
+      "recall": 1.0,
+      "scenarios": 6
+    },
+    "performance": {
+      "passed": 6,
+      "precision": 1.0,
+      "recall": 1.0,
+      "scenarios": 6
+    },
+    "policy": {
+      "passed": 7,
+      "precision": 0.875,
+      "recall": 0.875,
+      "scenarios": 8
+    },
+    "responsive": {
+      "passed": 6,
+      "precision": 1.0,
+      "recall": 1.0,
+      "scenarios": 6
+    },
+    "validation": {
+      "passed": 8,
+      "precision": 1.0,
+      "recall": 1.0,
+      "scenarios": 8
+    }
+  },
+  "failures": [
+    {
+      "id": "dev-policy-02",
+      "problems": [
+        "severity low below medium",
+        "unexpected content issue: Page loads insecure (http) resources on a secure page"
+      ]
+    }
+  ],
+  "meta": {
+    "config_version": "rules-2",
+    "dataset": "dev.jsonl",
+    "dataset_sha256": "7dd9da9bb2dcf9d3",
+    "generated_at": "2026-10-19T04:37:40+00:00",
+    "label_source": "author (not independently reviewed)",
+    "model": "built-in-rules",
+    "provider": "rules",
+    "scenarios": 144,
+    "set": "dev"
+  },
+  "metrics": {
+    "abstention_accuracy": 1.0,
+    "clean_false_positive_scenarios": 0,
+    "clean_scenarios": 13,
+    "evidence_coverage": 1.0,
+    "issue_precision": 0.9926,
+    "recall_all": 0.9926,
+    "recall_high_severity": 1.0,
+    "regression_rate": 0.0,
+    "scenarios": 144,
+    "scenarios_passed": 143
+  },
+  "per_scenario": {
+    "dev-3p-00": true,
+    "dev-3p-01": true,
+    "dev-3p-02": true,
+    "dev-3p-03": true,
+    "dev-a11y-00": true,
+    "dev-a11y-01": true,
+    "dev-a11y-02": true,
+    "dev-a11y-03": true,
+    "dev-a11y-04": true,
+    "dev-a11y-05": true,
+    "dev-a11y-06": true,
+    "dev-a11y-07": true,
+    "dev-a11y-08": true,
+    "dev-a11y-09": true,
+    "dev-a11y-10": true,
+    "dev-a11y-11": true,
+    "dev-a11y-12": true,
+    "dev-a11y-13": true,
+    "dev-ambig-00": true,
+    "dev-ambig-01": true,
+    "dev-ambig-02": true,
+    "dev-ambig-03": true,
+    "dev-ambig-04": true,
+    "dev-ambig-05": true,
+    "dev-api-auth-06": true,
+    "dev-api-auth-07": true,
+    "dev-api-schema-04": true,
+    "dev-api-schema-05": true,
+    "dev-api-slow-02": true,
+    "dev-api-slow-03": true,
+    "dev-api-status-00": true,
+    "dev-api-status-01": true,
+    "dev-asset-00": true,
+    "dev-asset-01": true,
+    "dev-asset-02": true,
+    "dev-asset-03": true,
+    "dev-asset-04": true,
+    "dev-asset-05": true,
+    "dev-asset-06": true,
+    "dev-asset-07": true,
+    "dev-auth-00": true,
+    "dev-auth-01": true,
+    "dev-auth-02": true,
+    "dev-auth-03": true,
+    "dev-boundary-00": true,
+    "dev-boundary-01": true,
+    "dev-boundary-02": true,
+    "dev-clean-00": true,
+    "dev-clean-01": true,
+    "dev-clean-02": true,
+    "dev-clean-03": true,
+    "dev-clean-04": true,
+    "dev-clean-05": true,
+    "dev-clean-06": true,
+    "dev-clean-07": true,
+    "dev-clean-08": true,
+    "dev-clean-09": true,
+    "dev-healthy-00": true,
+    "dev-healthy-01": true,
+    "dev-healthy-02": true,
+    "dev-healthy-03": true,
+    "dev-healthy-04": true,
+    "dev-healthy-05": true,
+    "dev-inject-00": true,
+    "dev-inject-01": true,
+    "dev-inject-02": true,
+    "dev-inject-03": true,
+    "dev-inject-04": true,
+    "dev-inject-05": true,
+    "dev-inject-06": true,
+    "dev-inject-07": true,
+    "dev-js-00": true,
+    "dev-js-01": true,
+    "dev-js-02": true,
+    "dev-js-03": true,
+    "dev-js-04": true,
+    "dev-js-05": true,
+    "dev-js-06": true,
+    "dev-js-07": true,
+    "dev-js-08": true,
+    "dev-js-09": true,
+    "dev-js-10": true,
+    "dev-js-11": true,
+    "dev-js-12": true,
+    "dev-js-13": true,
+    "dev-js-14": true,
+    "dev-js-15": true,
+    "dev-js-16": true,
+    "dev-js-17": true,
+    "dev-js-18": true,
+    "dev-js-19": true,
+    "dev-js-20": true,
+    "dev-js-21": true,
+    "dev-js-22": true,
+    "dev-js-23": true,
+    "dev-logconfirmed-00": true,
+    "dev-logconfirmed-01": true,
+    "dev-logconfirmed-02": true,
+    "dev-logconfirmed-03": true,
+    "dev-logconfirmed-04": true,
+    "dev-logconfirmed-05": true,
+    "dev-logconfirmed-06": true,
+    "dev-logconfirmed-07": true,
+    "dev-multi-00": true,
+    "dev-multi-01": true,
+    "dev-multi-02": true,
+    "dev-multi-03": true,
+    "dev-multi-04": true,
+    "dev-multi-05": true,
+    "dev-multi-06": true,
+    "dev-net-00": true,
+    "dev-nodata-00": true,
+    "dev-nodata-01": true,
+    "dev-nodata-02": true,
+    "dev-nodata-03": true,
+    "dev-nodata-04": true,
+    "dev-nodata-05": true,
+    "dev-nodata-06": true,
+    "dev-nodata-07": true,
+    "dev-policy-00": true,
+    "dev-policy-01": true,
+    "dev-policy-02": false,
+    "dev-policy-03": true,
+    "dev-policy-04": true,
+    "dev-policy-05": true,
+    "dev-policy-06": true,
+    "dev-policy-07": true,
+    "dev-slow-00": true,
+    "dev-slow-01": true,
+    "dev-slow-02": true,
+    "dev-validation-00": true,
+    "dev-validation-01": true,
+    "dev-validation-02": true,
+    "dev-validation-03": true,
+    "dev-validation-04": true,
+    "dev-validation-05": true,
+    "dev-validation-06": true,
+    "dev-validation-07": true,
+    "dev-vp-a11y-00": true,
+    "dev-vp-a11y-01": true,
+    "dev-vp-a11y-02": true,
+    "dev-vp-a11y-03": true,
+    "dev-vp-a11y-04": true,
+    "dev-vp-a11y-05": true
+  },
+  "regressions": [],
+  "targets": {
+    "evidence_coverage": {
+      "actual": 1.0,
+      "met": true,
+      "target": 0.95
+    },
+    "issue_precision": {
+      "actual": 0.9926,
+      "met": true,
+      "target": 0.9
+    },
+    "recall_high_severity": {
+      "actual": 1.0,
+      "met": true,
+      "target": 0.85
+    },
+    "regression_rate_max": {
+      "actual": 0.0,
+      "met": true,
+      "target": 0.05
+    }
+  }
+}

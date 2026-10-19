@@ -1,0 +1,206 @@
+{
+  "by_expected_severity": {
+    "high": {
+      "expected": 17,
+      "recall": 1.0,
+      "scenario_level_matched": 17
+    },
+    "info": {
+      "expected": 5,
+      "recall": 1.0,
+      "scenario_level_matched": 5
+    },
+    "low": {
+      "expected": 9,
+      "recall": 1.0,
+      "scenario_level_matched": 9
+    },
+    "medium": {
+      "expected": 22,
+      "recall": 1.0,
+      "scenario_level_matched": 22
+    }
+  },
+  "by_tag": {
+    "accessibility": {
+      "passed": 4,
+      "precision": 1.0,
+      "recall": 1.0,
+      "scenarios": 4
+    },
+    "ambiguous": {
+      "passed": 5,
+      "precision": 1.0,
+      "recall": 1.0,
+      "scenarios": 5
+    },
+    "backend_api": {
+      "passed": 24,
+      "precision": 1.0,
+      "recall": 1.0,
+      "scenarios": 24
+    },
+    "clean": {
+      "passed": 6,
+      "precision": 1.0,
+      "recall": 1.0,
+      "scenarios": 6
+    },
+    "content": {
+      "passed": 3,
+      "precision": 1.0,
+      "recall": 1.0,
+      "scenarios": 3
+    },
+    "database": {
+      "passed": 4,
+      "precision": 1.0,
+      "recall": 1.0,
+      "scenarios": 4
+    },
+    "frontend": {
+      "passed": 8,
+      "precision": 1.0,
+      "recall": 1.0,
+      "scenarios": 8
+    },
+    "injection": {
+      "passed": 2,
+      "precision": 1.0,
+      "recall": 1.0,
+      "scenarios": 2
+    },
+    "multi": {
+      "passed": 4,
+      "precision": 1.0,
+      "recall": 1.0,
+      "scenarios": 4
+    },
+    "network": {
+      "passed": 2,
+      "precision": 1.0,
+      "recall": 1.0,
+      "scenarios": 2
+    },
+    "performance": {
+      "passed": 4,
+      "precision": 1.0,
+      "recall": 1.0,
+      "scenarios": 4
+    },
+    "policy": {
+      "passed": 4,
+      "precision": 1.0,
+      "recall": 1.0,
+      "scenarios": 4
+    },
+    "validation": {
+      "passed": 3,
+      "precision": 1.0,
+      "recall": 1.0,
+      "scenarios": 3
+    }
+  },
+  "failures": [],
+  "meta": {
+    "config_version": "rules-2",
+    "dataset": "heldout.jsonl",
+    "dataset_sha256": "a4304a6fb88f46a1",
+    "generated_at": "2026-10-18T19:22:27+00:00",
+    "label_source": "author (not independently reviewed)",
+    "model": "built-in-rules",
+    "provider": "rules",
+    "scenarios": 55,
+    "set": "heldout"
+  },
+  "metrics": {
+    "abstention_accuracy": 1.0,
+    "clean_false_positive_scenarios": 0,
+    "clean_scenarios": 6,
+    "evidence_coverage": 1.0,
+    "issue_precision": 1.0,
+    "recall_all": 1.0,
+    "recall_high_severity": 1.0,
+    "scenarios": 55,
+    "scenarios_passed": 55
+  },
+  "per_scenario": {
+    "held-3p-00": true,
+    "held-3p-01": true,
+    "held-a11y-00": true,
+    "held-a11y-01": true,
+    "held-a11y-02": true,
+    "held-a11y-03": true,
+    "held-ambig-00": true,
+    "held-ambig-01": true,
+    "held-api-auth-03": true,
+    "held-api-schema-02": true,
+    "held-api-slow-01": true,
+    "held-api-status-00": true,
+    "held-asset-00": true,
+    "held-asset-01": true,
+    "held-asset-02": true,
+    "held-auth-00": true,
+    "held-boundary-00": true,
+    "held-boundary-01": true,
+    "held-clean-00": true,
+    "held-clean-01": true,
+    "held-clean-02": true,
+    "held-clean-03": true,
+    "held-healthy-00": true,
+    "held-healthy-01": true,
+    "held-healthy-02": true,
+    "held-inject-00": true,
+    "held-inject-01": true,
+    "held-js-00": true,
+    "held-js-01": true,
+    "held-js-02": true,
+    "held-js-03": true,
+    "held-js-04": true,
+    "held-js-05": true,
+    "held-logconfirmed-00": true,
+    "held-logconfirmed-01": true,
+    "held-logconfirmed-02": true,
+    "held-logconfirmed-03": true,
+    "held-multi-00": true,
+    "held-multi-01": true,
+    "held-multi-02": true,
+    "held-multi-03": true,
+    "held-nodata-00": true,
+    "held-nodata-01": true,
+    "held-nodata-02": true,
+    "held-nodata-03": true,
+    "held-nodata-04": true,
+    "held-nodata-05": true,
+    "held-policy-00": true,
+    "held-policy-01": true,
+    "held-policy-02": true,
+    "held-policy-03": true,
+    "held-slow-00": true,
+    "held-slow-01": true,
+    "held-validation-01": true,
+    "held-validation-02": true
+  },
+  "targets": {
+    "evidence_coverage": {
+      "actual": 1.0,
+      "met": true,
+      "target": 0.95
+    },
+    "issue_precision": {
+      "actual": 1.0,
+      "met": true,
+      "target": 0.9
+    },
+    "recall_high_severity": {
+      "actual": 1.0,
+      "met": true,
+      "target": 0.85
+    },
+    "regression_rate_max": {
+      "actual": null,
+      "met": null,
+      "target": 0.05
+    }
+  }
+}

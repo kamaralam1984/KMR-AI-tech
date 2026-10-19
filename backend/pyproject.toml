@@ -1,0 +1,72 @@
+[project]
+name = "kmr-ai-backend"
+version = "0.1.0"
+description = "KMR AI API"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.30",
+    "pydantic>=2.8",
+    "pydantic-settings>=2.4",
+    "sqlalchemy[asyncio]>=2.0.36",
+    "alembic>=1.14",
+    "psycopg[binary]>=3.2",
+    "argon2-cffi>=23.1",
+    "redis>=5.2",
+    "email-validator>=2.2",
+    "httpx>=0.27",
+    "dnspython>=2.6",
+    "playwright==1.64.0",
+    "cryptography>=43",
+    "jsonschema>=4.23",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+    "ruff>=0.6",
+    "mypy>=1.11",
+    "pip-audit>=2.7",
+    "types-jsonschema>=4.23",
+]
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "S", "N"]
+
+[tool.ruff.lint.per-file-ignores]
+# Tests build SQL from fixed table names and carry long literal fixtures.
+"tests/*" = ["S101", "S608", "E501"]
+# Fixtures imported from another test module are used by name, which looks like a redefinition.
+"tests/test_approvals_api.py" = ["S101", "S608", "E501", "F811"]
+"tests/test_verification.py" = ["S101", "S608", "E501", "F811"]
+"tests/test_dashboard_api.py" = ["S101", "S608", "E501", "F811"]
+# Migrations embed SQL, which reads better unwrapped (and applied ones must not be edited).
+"migrations/*" = ["E501"]
+# Full of user-facing sentences, which read better unwrapped.
+"app/diagnosis/rules.py" = ["E501"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+plugins = ["pydantic.mypy"]
+
+# Application code stays strict. Tests are checked for real type errors, but are not required to
+# annotate every fixture or carry `type: ignore` markers.
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+disallow_untyped_calls = false
+disallow_untyped_decorators = false
+warn_unused_ignores = false

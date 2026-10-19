@@ -1,0 +1,212 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens. Colors come from the product palette; the *-text variants are darker
+ * shades used for text so small copy meets WCAG AA contrast (the base status colors do not
+ * on white). Use base colors for borders, icons and fills, *-text for readable text.
+ */
+@theme {
+  /* Warm obsidian and gold. The names stay (navy, primary) so existing components follow along. */
+  --color-navy-950: #0e0d0b;
+  --color-navy-900: #17150f;
+  --color-navy-700: #2b261a;
+
+  --color-primary: #1a160d;
+  --color-primary-strong: #2e2716;
+  --color-primary-text: #7a5a12;
+  --color-primary-soft: #f4ecd8;
+  --color-accent: #c9a24b;
+  --color-accent-text: #7a5a12;
+  --color-gold-300: #ecd391;
+  --color-gold-400: #dcb967;
+  --color-gold-500: #c9a24b;
+  --color-gold-700: #8f6a1c;
+  --color-ivory: #f8f5ef;
+
+  --color-page: #f8f5ef;
+  --color-surface: #ffffff;
+  --color-ink: #17140c;
+  --color-muted: #6a6354;
+  --color-line: #e7dfce;
+
+  --color-success: #168a62;
+  --color-success-text: #0f6b4b;
+  --color-success-soft: #e8f5ef;
+  --color-warning: #c98212;
+  --color-warning-text: #8a5a00;
+  --color-warning-soft: #fdf3e1;
+  --color-danger: #d64545;
+  --color-danger-text: #b42318;
+  --color-danger-soft: #fceaea;
+
+  --font-sans:
+    var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --font-display:
+    var(--font-display-face), "Cormorant Garamond", "Iowan Old Style", "Palatino Linotype",
+    Palatino, Georgia, serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+
+  --shadow-card: 0 1px 2px rgb(23 20 12 / 0.05), 0 6px 20px -8px rgb(23 20 12 / 0.1);
+  --shadow-pop: 0 12px 32px rgb(23 20 12 / 0.18);
+
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+}
+
+html {
+  /* App-like touch behavior: no double-tap zoom delay, no grey tap flash. */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  background: var(--color-page);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100dvh;
+  background: var(--color-page);
+  color: var(--color-ink);
+  overscroll-behavior-y: contain;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-gold-700);
+  outline-offset: 2px;
+}
+
+/* On dark surfaces the focus ring switches to a light color. */
+.on-dark :focus-visible {
+  outline-color: var(--color-gold-300);
+}
+
+dialog::backdrop {
+  background: rgb(14 13 11 / 0.6);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---- Marketing and brand motion. All of it stops under prefers-reduced-motion (rule above). ---- */
+
+@keyframes gold-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes gold-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0.3) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1) rotate(45deg);
+  }
+}
+@keyframes shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+@keyframes float-slow {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+@keyframes sweep {
+  from {
+    transform: translateX(-120%);
+  }
+  to {
+    transform: translateX(220%);
+  }
+}
+
+.gold-line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: gold-draw 3.2s var(--ease-standard) forwards;
+}
+.gold-text {
+  background: linear-gradient(
+    100deg,
+    #b8893a 0%,
+    #f1d98f 30%,
+    #c9a24b 55%,
+    #f6e3a8 75%,
+    #b8893a 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 9s linear infinite;
+}
+.gold-button {
+  background-image: linear-gradient(180deg, #ecd391 0%, #c9a24b 55%, #a67c26 100%);
+  color: #1a1405;
+  box-shadow:
+    0 0 0 1px rgb(255 240 190 / 0.5) inset,
+    0 10px 30px -10px rgb(201 162 75 / 0.65);
+}
+.gold-button:hover {
+  filter: brightness(1.06);
+}
+.sparkle {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: radial-gradient(circle, #fff6d6 0%, #ecd391 35%, transparent 70%);
+  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+  opacity: 0;
+  animation: twinkle var(--dur, 4s) ease-in-out var(--delay, 0s) infinite;
+}
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.9s var(--ease-standard),
+    transform 0.9s var(--ease-standard);
+  transition-delay: var(--reveal-delay, 0s);
+}
+.reveal[data-visible="true"] {
+  opacity: 1;
+  transform: none;
+}
+.no-js .reveal {
+  opacity: 1;
+  transform: none;
+}

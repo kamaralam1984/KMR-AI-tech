@@ -1,0 +1,467 @@
+{
+ "version": 1,
+ "note": "Dev set: written by the author before the patterns were extended, then used to tune them. Not independently reviewed. known_miss = documented limit.",
+ "cases": [
+  {
+   "expect": "caught",
+   "category": "email",
+   "text": "Contact jane.doe@example.com for help",
+   "must_not_contain": [
+    "jane.doe@example.com"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "email",
+   "text": "Error for user_42+test@sub.example.co.in",
+   "must_not_contain": [
+    "user_42+test@sub.example.co.in"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "email",
+   "text": "Reply-To: A.B-c@Mail.Example.org",
+   "must_not_contain": [
+    "A.B-c@Mail.Example.org"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "phone",
+   "text": "Call us on +91 98765 43210",
+   "must_not_contain": [
+    "98765 43210",
+    "98765"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "phone",
+   "text": "Phone: 9876543210",
+   "must_not_contain": [
+    "9876543210"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "phone",
+   "text": "(415) 555-2671 is the desk line",
+   "must_not_contain": [
+    "555-2671"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "phone",
+   "text": "WhatsApp +44 7911 123456 now",
+   "must_not_contain": [
+    "7911 123456"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "phone",
+   "text": "tel 080-2345-6789 ext",
+   "must_not_contain": [
+    "2345-6789"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "card",
+   "text": "Card 4111 1111 1111 1111 was declined",
+   "must_not_contain": [
+    "4111 1111 1111 1111"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "card",
+   "text": "pay with 5500-0000-0000-0004",
+   "must_not_contain": [
+    "5500-0000-0000-0004"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "card",
+   "text": "number 378282246310005 invalid",
+   "must_not_contain": [
+    "378282246310005"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "id",
+   "text": "Aadhaar 1234 5678 9012 verified",
+   "must_not_contain": [
+    "1234 5678 9012"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "id",
+   "text": "aadhaar: 123456789012",
+   "must_not_contain": [
+    "123456789012"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "id",
+   "text": "PAN ABCDE1234F submitted",
+   "must_not_contain": [
+    "ABCDE1234F"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "id",
+   "text": "IFSC HDFC0001234 for transfer",
+   "must_not_contain": [
+    "HDFC0001234"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "token",
+   "text": "Authorization: Bearer abcdefghijklmnop1234",
+   "must_not_contain": [
+    "abcdefghijklmnop1234"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "token",
+   "text": "jwt eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0In0.abc123def456",
+   "must_not_contain": [
+    "eyJhbGciOiJIUzI1NiJ9"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "token",
+   "text": "api_key=sk_live_1234567890abcdef",
+   "must_not_contain": [
+    "sk_live_1234567890abcdef"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "token",
+   "text": "password=hunter2hunter2",
+   "must_not_contain": [
+    "hunter2hunter2"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "token",
+   "text": "session=9f8a7b6c5d4e3f2a1b0c9d8e7f6a5b4c",
+   "must_not_contain": [
+    "9f8a7b6c5d4e3f2a1b0c9d8e7f6a5b4c"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "token",
+   "text": "secret: abcd1234efgh5678",
+   "must_not_contain": [
+    "abcd1234efgh5678"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "token",
+   "text": "value 9f8a7b6c5d4e3f2a1b0c9d8e7f6a5b4c3d2e1f0a leaked",
+   "must_not_contain": [
+    "9f8a7b6c5d4e3f2a1b0c9d8e7f6a5b4c3d2e1f0a"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "otp",
+   "text": "Your OTP is 482913",
+   "must_not_contain": [
+    "482913"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "otp",
+   "text": "code: 5521 expires soon",
+   "must_not_contain": [
+    "5521"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "otp",
+   "text": "PIN 7391 entered",
+   "must_not_contain": [
+    "7391"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "otp",
+   "text": "CVV 123456",
+   "must_not_contain": [
+    "123456"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "label",
+   "text": "Name: Rahul Kumar Sharma",
+   "must_not_contain": [
+    "Rahul Kumar Sharma"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "label",
+   "text": "Full name - Priya Nair",
+   "must_not_contain": [
+    "Priya Nair"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "label",
+   "text": "DOB: 05/03/1990",
+   "must_not_contain": [
+    "05/03/1990"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "label",
+   "text": "Address: 12 MG Road, Pune 411001",
+   "must_not_contain": [
+    "12 MG Road"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "label",
+   "text": "Father: Suresh Kumar",
+   "must_not_contain": [
+    "Suresh Kumar"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "label",
+   "text": "Mobile: 98765 43210",
+   "must_not_contain": [
+    "98765"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "name",
+   "text": "Dear Mr Rajesh Verma, welcome",
+   "must_not_contain": [
+    "Rajesh Verma"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "name",
+   "text": "Dr. Anita Desai replied",
+   "must_not_contain": [
+    "Anita Desai"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "name",
+   "text": "Smt Lakshmi Iyer applied",
+   "must_not_contain": [
+    "Lakshmi Iyer"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "mixed",
+   "text": "Hi Mr Amit Shah (amit.shah@corp.com) call 9988776655",
+   "must_not_contain": [
+    "Amit Shah",
+    "amit.shah@corp.com",
+    "9988776655"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "mixed",
+   "text": "Failed: token=abc123def456 for jane@x.org",
+   "must_not_contain": [
+    "abc123def456",
+    "jane@x.org"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "mixed",
+   "text": "Order for Name: Sara Khan card 4242424242424242",
+   "must_not_contain": [
+    "Sara Khan",
+    "4242424242424242"
+   ]
+  },
+  {
+   "expect": "known_miss",
+   "category": "name_in_sentence",
+   "text": "Yesterday Rohan Mehta told me the form failed",
+   "must_not_contain": [
+    "Rohan Mehta"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "name_in_sentence",
+   "text": "Thanks, Fatima Sheikh, your booking is ready",
+   "must_not_contain": [
+    "Fatima Sheikh"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "address_in_sentence",
+   "text": "I live near the old fort in Jaipur at house 14 gali 3",
+   "must_not_contain": [
+    "house 14"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "dob_in_sentence",
+   "text": "She was born on 5 March 1990 in Delhi",
+   "must_not_contain": [
+    "5 March 1990"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "obfuscated_email",
+   "text": "write to john at example dot com",
+   "must_not_contain": [
+    "john at example dot com"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "number_in_words",
+   "text": "my number is nine eight seven six five four three two one zero",
+   "must_not_contain": [
+    "nine eight seven six"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "otp_in_words",
+   "text": "the code is four seven one nine",
+   "must_not_contain": [
+    "four seven one nine"
+   ]
+  },
+  {
+   "expect": "known_miss",
+   "category": "initials_name",
+   "text": "Submitted by R. K. Sharma",
+   "must_not_contain": [
+    "Sharma"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "username",
+   "text": "logged in as rahul_sharma_91",
+   "must_not_contain": [
+    "rahul_sharma_91"
+   ]
+  },
+  {
+   "expect": "caught",
+   "category": "city_pincode",
+   "text": "Ship to Pune 411001 Maharashtra",
+   "must_not_contain": [
+    "411001"
+   ]
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Error 404 Not Found",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Version 1.2.3 released",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Copyright 2024 Example Ltd",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Order placed on 2024-01-15",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Page 3 of 12",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Loading failed after 3 retries",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "TypeError: Cannot read properties of undefined (reading 'map')",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Network request failed",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Select a size",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Total 1,299 items",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Opening hours 9 to 5",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Step 2 of 4",
+   "must_not_contain": []
+  }
+ ]
+}

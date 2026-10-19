@@ -1,0 +1,25 @@
+{
+  "note": "Shared by backend/tests/test_assistant_logic.py and frontend/src/widget/widget.test.ts so the browser and server file rules cannot drift apart.",
+  "spec": {
+    "accept": ["image/jpeg"],
+    "min_kb": 5, "max_kb": 100,
+    "min_width": 200, "max_width": 400,
+    "min_height": 200, "max_height": 500
+  },
+  "cases": [
+    {"name": "valid photo", "meta": {"mime": "image/jpeg", "size_bytes": 50000, "width": 300, "height": 400}, "status": "ok"},
+    {"name": "wrong type", "meta": {"mime": "image/png", "size_bytes": 50000, "width": 300, "height": 400}, "status": "invalid"},
+    {"name": "pdf for a photo field", "meta": {"mime": "application/pdf", "size_bytes": 50000}, "status": "invalid"},
+    {"name": "too large", "meta": {"mime": "image/jpeg", "size_bytes": 102401, "width": 300, "height": 400}, "status": "invalid"},
+    {"name": "exactly at the maximum", "meta": {"mime": "image/jpeg", "size_bytes": 102400, "width": 300, "height": 400}, "status": "ok"},
+    {"name": "too small in kb", "meta": {"mime": "image/jpeg", "size_bytes": 1000, "width": 300, "height": 400}, "status": "invalid"},
+    {"name": "too narrow", "meta": {"mime": "image/jpeg", "size_bytes": 50000, "width": 199, "height": 400}, "status": "invalid"},
+    {"name": "too wide", "meta": {"mime": "image/jpeg", "size_bytes": 50000, "width": 401, "height": 400}, "status": "invalid"},
+    {"name": "too short", "meta": {"mime": "image/jpeg", "size_bytes": 50000, "width": 300, "height": 199}, "status": "invalid"},
+    {"name": "too tall", "meta": {"mime": "image/jpeg", "size_bytes": 50000, "width": 300, "height": 501}, "status": "invalid"},
+    {"name": "pixel size unreadable", "meta": {"mime": "image/jpeg", "size_bytes": 50000}, "status": "invalid"},
+    {"name": "size missing", "meta": {"mime": "image/jpeg", "width": 300, "height": 400}, "status": "invalid"},
+    {"name": "negative size", "meta": {"mime": "image/jpeg", "size_bytes": -1, "width": 300, "height": 400}, "status": "invalid"},
+    {"name": "no file at all", "meta": null, "status": "missing"}
+  ]
+}

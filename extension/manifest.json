@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "KMR AI Page Agent",
+  "version": "0.1.0",
+  "description": "Looks at the page you are on, highlights problems, and never clicks, types or changes anything. Personal data is redacted in your browser first.",
+  "minimum_chrome_version": "120",
+  "action": { "default_title": "KMR AI Page Agent", "default_popup": "popup.html" },
+  "options_page": "options.html",
+  "background": { "service_worker": "src/background.js" },
+  "permissions": ["activeTab", "scripting", "storage"],
+  "optional_host_permissions": ["https://*/*", "http://localhost/*"],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; base-uri 'none'; frame-ancestors 'none'"
+  }
+}

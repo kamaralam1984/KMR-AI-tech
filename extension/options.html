@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>KMR AI Page Agent settings</title>
+    <link rel="stylesheet" href="ui.css" />
+  </head>
+  <body>
+    <main>
+      <h1>KMR AI Page Agent settings</h1>
+      <p class="muted">
+        Create an extension token in KMR AI (Settings, Browser extension) and paste it here. The
+        token is stored only in this browser profile and is used only by the extension's background
+        service.
+      </p>
+      <label>KMR AI server address (API)
+        <input id="apiBase" type="url" placeholder="https://api.example.com" autocomplete="off" />
+      </label>
+      <label>KMR AI web address
+        <input id="webBase" type="url" placeholder="https://app.example.com" autocomplete="off" />
+      </label>
+      <label>Extension token
+        <input id="token" type="password" placeholder="kmr_xt_..." autocomplete="off" />
+      </label>
+      <div class="row"><button id="load" type="button">Load my projects</button></div>
+      <label>Project (verified websites only)
+        <select id="projectId"></select>
+      </label>
+      <label>Extra sites to never read (one per line; you can add, not remove, the built-in list)
+        <textarea id="blocklist" rows="4" spellcheck="false"></textarea>
+      </label>
+      <label class="inline"><input id="confirm" type="checkbox" checked />
+        <span>Always show me what will be sent and ask before sending (recommended)</span>
+      </label>
+      <label class="inline"><input id="shot" type="checkbox" />
+        <span>Also send a screenshot with fields and personal-looking text blacked out. Skipped
+        automatically when the page has frames, video or canvas.</span>
+      </label>
+      <div class="row"><button id="save" type="button" class="primary">Save</button></div>
+      <p id="msg" role="status" aria-live="polite"></p>
+      <p class="muted">
+        Blocked by default: banks, mail, payment and sign-in pages, government sites, and any page
+        with password, OTP, card or ID-number fields.
+      </p>
+    </main>
+    <script src="options.js"></script>
+  </body>
+</html>

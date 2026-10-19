@@ -1,0 +1,15 @@
+:root { color-scheme: light; --ink: #172033; --muted: #667085; --line: #E4E8F0; --primary: #4568F5; --bg: #F5F7FB; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.5 system-ui, sans-serif; min-width: 320px; }
+main { padding: 16px; display: flex; flex-direction: column; gap: 12px; max-width: 560px; }
+h1 { margin: 0; font-size: 16px; }
+.muted { color: var(--muted); margin: 0; font-size: 13px; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; }
+label { display: flex; flex-direction: column; gap: 4px; font-weight: 600; }
+label.inline { flex-direction: row; align-items: flex-start; gap: 8px; font-weight: 400; }
+input[type=text], input[type=url], input[type=password], select, textarea { font: inherit; padding: 8px; border: 1px solid var(--line); border-radius: 6px; background: #fff; color: var(--ink); }
+button { font: inherit; min-height: 36px; padding: 6px 12px; border-radius: 6px; border: 1px solid var(--line); background: #fff; color: var(--ink); cursor: pointer; }
+button.primary { background: var(--primary); border-color: var(--primary); color: #fff; }
+button:disabled { opacity: .55; cursor: not-allowed; }
+:focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; }
+pre { margin: 0; max-height: 240px; overflow: auto; white-space: pre-wrap; word-break: break-word; background: #fff; border: 1px solid var(--line); border-radius: 6px; padding: 8px; font-size: 12px; }
+#status { margin: 0; font-weight: 600; }

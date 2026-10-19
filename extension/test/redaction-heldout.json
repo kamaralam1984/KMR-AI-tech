@@ -1,0 +1,451 @@
+{
+ "version": 1,
+ "note": "Held-out set written BEFORE the redaction patterns were extended for it. Do not tune patterns against it; add new cases to a new file instead.",
+ "cases": [
+  {
+   "expect": "leak",
+   "category": "name_in_sentence",
+   "text": "Meera Pillai called about the refund yesterday",
+   "must_not_contain": [
+    "Meera Pillai"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "name_in_sentence",
+   "text": "Please ask Vikram Singh to review this form",
+   "must_not_contain": [
+    "Vikram Singh"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "name_in_sentence",
+   "text": "Welcome back, Neha Kapoor!",
+   "must_not_contain": [
+    "Neha Kapoor"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "name_in_sentence",
+   "text": "Ticket raised by Arjun Reddy at 10am",
+   "must_not_contain": [
+    "Arjun Reddy"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "name_in_sentence",
+   "text": "Hello Sunita Devi, your form is incomplete",
+   "must_not_contain": [
+    "Sunita Devi"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "name_in_sentence",
+   "text": "Regards, Imran Qureshi",
+   "must_not_contain": [
+    "Imran Qureshi"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "name_in_sentence",
+   "text": "Application of Kavita Joshi was rejected",
+   "must_not_contain": [
+    "Kavita Joshi"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "name_in_sentence",
+   "text": "Student Rohit Bansal scored well",
+   "must_not_contain": [
+    "Rohit Bansal"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "name_in_sentence",
+   "text": "From: Alok Nath Tiwari",
+   "must_not_contain": [
+    "Alok Nath Tiwari"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "name_in_sentence",
+   "text": "Hi Ananya, your seat is booked",
+   "must_not_contain": [
+    "Ananya"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "address",
+   "text": "Deliver to flat 402, Sai Heights, Baner, Pune",
+   "must_not_contain": [
+    "flat 402",
+    "Sai Heights"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "address",
+   "text": "He lives at 22 Park Street Kolkata",
+   "must_not_contain": [
+    "22 Park Street"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "address",
+   "text": "House No. 7, Gali 4, Karol Bagh",
+   "must_not_contain": [
+    "House No. 7",
+    "Karol Bagh"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "pin",
+   "text": "Pincode 560034 not serviceable",
+   "must_not_contain": [
+    "560034"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "pin",
+   "text": "ZIP: 94107",
+   "must_not_contain": [
+    "94107"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "pin",
+   "text": "Postal code is 110001 for this area",
+   "must_not_contain": [
+    "110001"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "dob",
+   "text": "Born on 12 August 1988",
+   "must_not_contain": [
+    "12 August 1988"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "dob",
+   "text": "Date of birth is 1990-02-14",
+   "must_not_contain": [
+    "1990-02-14"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "dob",
+   "text": "DOB 14/02/1990",
+   "must_not_contain": [
+    "14/02/1990"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "email_obf",
+   "text": "reach me at priya dot sharma at gmail dot com",
+   "must_not_contain": [
+    "priya dot sharma"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "email_obf",
+   "text": "email: rahul(at)example(dot)com",
+   "must_not_contain": [
+    "rahul(at)example"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "spelled",
+   "text": "call six two zero one four five six seven eight nine",
+   "must_not_contain": [
+    "six two zero one"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "spelled",
+   "text": "pin is one two three four",
+   "must_not_contain": [
+    "one two three four"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "username",
+   "text": "Signed in as deepak_verma_77",
+   "must_not_contain": [
+    "deepak_verma_77"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "username",
+   "text": "username: sneha.iyer.1995",
+   "must_not_contain": [
+    "sneha.iyer.1995"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "username",
+   "text": "@rahul_sharma mentioned you",
+   "must_not_contain": [
+    "rahul_sharma"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "account",
+   "text": "Account no 123456789012345 debited",
+   "must_not_contain": [
+    "123456789012345"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "account",
+   "text": "A/c 00112233445566",
+   "must_not_contain": [
+    "00112233445566"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "vehicle",
+   "text": "Vehicle MH12AB1234 registered",
+   "must_not_contain": [
+    "MH12AB1234"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "passport",
+   "text": "Passport No. K1234567 expires soon",
+   "must_not_contain": [
+    "K1234567"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "ssn",
+   "text": "SSN 123-45-6789 on file",
+   "must_not_contain": [
+    "123-45-6789"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "ip",
+   "text": "Login from 203.0.113.42 failed",
+   "must_not_contain": [
+    "203.0.113.42"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "url_user",
+   "text": "Profile at https://example.com/u/rahul.sharma",
+   "must_not_contain": [
+    "rahul.sharma"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "covered",
+   "text": "Mail jane@corp.io or 9123456780",
+   "must_not_contain": [
+    "jane@corp.io",
+    "9123456780"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "covered",
+   "text": "Card 4000056655665556 and OTP 884213",
+   "must_not_contain": [
+    "4000056655665556",
+    "884213"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "covered",
+   "text": "Name: Sita Rao; Mobile: 9000000000",
+   "must_not_contain": [
+    "Sita Rao",
+    "9000000000"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "covered",
+   "text": "token=@@GITHUB_PAT@@",
+   "must_not_contain": [
+    "@@GITHUB_PAT@@"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "covered",
+   "text": "Authorization: Bearer xyz987654321abc",
+   "must_not_contain": [
+    "xyz987654321abc"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "covered",
+   "text": "Dr. Ramesh Gupta signed it",
+   "must_not_contain": [
+    "Ramesh Gupta"
+   ]
+  },
+  {
+   "expect": "leak",
+   "category": "covered",
+   "text": "PAN FGHIJ5678K ok",
+   "must_not_contain": [
+    "FGHIJ5678K"
+   ]
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Welcome to our store",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Sign up for the newsletter",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Your cart is empty",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Free shipping over 500",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Contact support",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Terms and Conditions apply",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Page not found",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Loading, please wait",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Order status: shipped",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Sale ends soon",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Add to cart",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "View all products",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Settings saved",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Total: 1,299.00",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Copyright 2025 Acme Ltd. All rights reserved.",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Version 4.2.1 build 2210",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Monday to Friday, 9 to 6",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Rated 4.5 out of 5 by 1,200 reviews",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Delivery in 3 to 5 days",
+   "must_not_contain": []
+  },
+  {
+   "expect": "unchanged",
+   "category": "clean",
+   "text": "Choose a size",
+   "must_not_contain": []
+  }
+ ]
+}

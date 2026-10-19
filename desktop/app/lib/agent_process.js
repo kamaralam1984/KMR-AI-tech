@@ -24,14 +24,24 @@ function allowed(method, p) {
   return ALLOWED.some(([m, re]) => m === method && re.test(p));
 }
 
+/**
+ * How to start the agent. A packaged Windows install ships kmr-agent.exe next to the app; a checkout
+ * uses the agent's own virtual environment, then the system Python.
+ */
 function agentCommand(appDir) {
-  if (process.env.KMR_AGENT_PYTHON) return process.env.KMR_AGENT_PYTHON;
+  const resources = process.resourcesPath || "";
+  const bundled = path.join(resources, process.platform === "win32" ? "kmr-agent.exe" : "kmr-agent");
+  if (resources && fs.existsSync(bundled)) return { command: bundled, args: ["run"], cwd: resources };
   const agentDir = path.join(appDir, "..", "agent");
+  if (process.env.KMR_AGENT_PYTHON) {
+    return { command: process.env.KMR_AGENT_PYTHON, args: ["-m", "kmr_desktop", "run"], cwd: agentDir };
+  }
   const venv =
     process.platform === "win32"
       ? path.join(agentDir, ".venv", "Scripts", "python.exe")
       : path.join(agentDir, ".venv", "bin", "python");
-  return fs.existsSync(venv) ? venv : process.platform === "win32" ? "python" : "/usr/bin/python3";
+  const python = fs.existsSync(venv) ? venv : process.platform === "win32" ? "python" : "/usr/bin/python3";
+  return { command: python, args: ["-m", "kmr_desktop", "run"], cwd: agentDir };
 }
 
 class AgentProcess {
@@ -46,14 +56,15 @@ class AgentProcess {
 
   start() {
     return new Promise((resolve, reject) => {
-      const agentDir = path.join(this.appDir, "..", "agent");
-      const env = { ...process.env, KMR_LOCAL_SECRET: this.secret, PYTHONPATH: agentDir };
+      const how = agentCommand(this.appDir);
+      const env = { ...process.env, KMR_LOCAL_SECRET: this.secret, PYTHONPATH: how.cwd, PYTHONUTF8: "1" };
       // A desktop app started from an editor can inherit variables that make GTK libraries abort.
       for (const k of ["GSETTINGS_SCHEMA_DIR", "GTK_PATH", "GTK_EXE_PREFIX", "GIO_MODULE_DIR"]) delete env[k];
-      this.child = spawn(agentCommand(this.appDir), ["-m", "kmr_desktop", "run"], {
-        cwd: agentDir,
+      this.child = spawn(how.command, how.args, {
+        cwd: how.cwd,
         env,
         stdio: ["ignore", "pipe", "pipe"],
+        windowsHide: true, // no console window flashing up on Windows
       });
       let buffer = "";
       let settled = false;
@@ -146,4 +157,4 @@ class AgentProcess {
   }
 }
 
-module.exports = { AgentProcess, allowed };
+module.exports = { AgentProcess, allowed, agentCommand };

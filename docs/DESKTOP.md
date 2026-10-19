@@ -63,7 +63,7 @@ photo. "Online" shows only when the app really reached the server.
 | Server `/desk/v1` (me, chat, step reports), desktop tokens, policy, built-in checks, Anthropic adapter | Built. 52 server tests. The Anthropic adapter was tested against a fake HTTP transport only; no API key was available. |
 | Agent (look, redaction, preview hash, approvals, local API, config) | Built. 65 tests, including the same labeled redaction sets as the browser extension (same results) and a contract test against the server's schema. |
 | Linux backend (AT-SPI) | Built and run for real: it lists real windows, reads and drives a real GTK test window (press, type), and a test shows that looking presses and types nothing. |
-| Windows backend (UI Automation) | Written, **not run on Windows**. |
+| Windows backend (UI Automation) | Rewritten against the `uiautomation` library's source (it fixes two real problems the first draft had: controls cannot cross threads, and `Invoke`/`SetValue` return a success flag that must be honoured). Its logic passes 11 tests against a faithful fake that also enforces the one-thread rule. A **live test on a real Windows Forms window exists and has not been run on Windows**; `.github/workflows/desktop.yml` runs it on a Windows runner and `desktop/WINDOWS.md` explains how to run it by hand. |
 | Chat window (Electron) | Built. 16 unit tests plus an end-to-end run of 36 checks: Electron, the real agent reading a real window, and the real server. |
 
 What the end-to-end run proves: connecting, the honest status, the window picker, the preview that is
@@ -84,9 +84,12 @@ reach the agent outside its own calls or see its secret.
 
 | | Linux (GNOME, Wayland/X11) | Windows |
 | --- | --- | --- |
-| Window list and text | Built, tested against real windows | Built against the same interface, **not run on Windows** |
-| Press / set text | Built, tested on a test window | Same, **not run on Windows** |
+| Window list and text | Built, tested against real windows | Built, logic tested with a fake; **not yet run on real Windows** |
+| Press / set text | Built, tested on a test window | Same, **not yet run on real Windows** |
+| Installer | Not built | Build steps written (PyInstaller, electron-builder), **never run** |
 | On-screen highlight | Not built (described in words) | Not built |
 | Keyboard shortcuts, raw pointer | Not offered on Wayland | Not built |
 
 Mobile (Android) is later and separate; iPhone cannot read other apps' screens at all.
+
+Install and use on Ubuntu: `desktop/UBUNTU.md` (installer: `desktop/install-ubuntu.sh`, self-check: `desktop/run.sh --check`).

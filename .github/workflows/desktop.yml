@@ -1,0 +1,90 @@
+# Tests the desktop assistant on a real Windows machine and on Linux. This is how the Windows backend
+# gets verified without a Windows computer at hand: the live test drives a real Windows Forms window
+# through the real UI Automation library. It runs only when desktop files change, or by hand.
+name: desktop
+
+on:
+  workflow_dispatch:
+  push:
+    paths: ["desktop/**", "backend/app/desktop/**", "extension/test/redaction-*.json", ".github/workflows/desktop.yml"]
+  pull_request:
+    paths: ["desktop/**", "backend/app/desktop/**", "extension/test/redaction-*.json", ".github/workflows/desktop.yml"]
+
+permissions:
+  contents: read
+
+jobs:
+  agent:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: desktop/agent
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: python -m pip install httpx pytest
+      - name: Install UI Automation (Windows only)
+        if: runner.os == 'Windows'
+        run: python -m pip install uiautomation comtypes
+      - name: Test (the live Windows test runs here and drives a real Windows Forms window)
+        run: python -m pytest -q -rs
+
+  app:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: desktop/app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install
+        run: pnpm install --frozen-lockfile=false
+      - name: Test
+        run: pnpm test
+
+  package-windows:
+    # Experimental: builds kmr-agent.exe and the installer. Nothing here has been run before this workflow.
+    needs: [agent, app]
+    runs-on: windows-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build the agent
+        working-directory: desktop/agent
+        run: |
+          python -m pip install httpx uiautomation comtypes pyinstaller
+          python build_exe.py
+      - name: Build the installer
+        working-directory: desktop/app
+        run: |
+          pnpm install --frozen-lockfile=false
+          pnpm dlx electron-builder --win nsis --publish never
+      - uses: actions/upload-artifact@v4
+        with:
+          name: kmr-assistant-windows
+          path: desktop/app/dist/*.exe

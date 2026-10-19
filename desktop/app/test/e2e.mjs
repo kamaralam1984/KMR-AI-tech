@@ -43,9 +43,16 @@ async function account() {
 }
 
 function startTestWindow() {
-  const env = { ...process.env, XDG_DATA_DIRS: "/usr/local/share:/usr/share" };
-  for (const k of ["GSETTINGS_SCHEMA_DIR", "GTK_PATH", "GTK_EXE_PREFIX", "GIO_MODULE_DIR"]) delete env[k];
-  const child = spawn("/usr/bin/python3", [path.join(ROOT, "..", "agent", "tests", "helpers", "gtk_test_app.py"), "150"], { env, stdio: ["ignore", "pipe", "ignore"] });
+  // Linux: a GTK window; Windows: a Windows Forms window. Same title and the same controls.
+  const helpers = path.join(ROOT, "..", "agent", "tests", "helpers");
+  let child;
+  if (process.platform === "win32") {
+    child = spawn("powershell", ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", path.join(helpers, "winforms_test_app.ps1"), "-Seconds", "150"], { stdio: ["ignore", "pipe", "ignore"] });
+  } else {
+    const env = { ...process.env, XDG_DATA_DIRS: "/usr/local/share:/usr/share" };
+    for (const k of ["GSETTINGS_SCHEMA_DIR", "GTK_PATH", "GTK_EXE_PREFIX", "GIO_MODULE_DIR"]) delete env[k];
+    child = spawn("/usr/bin/python3", [path.join(helpers, "gtk_test_app.py"), "150"], { env, stdio: ["ignore", "pipe", "ignore"] });
+  }
   const events = [];
   const rl = readline.createInterface({ input: child.stdout });
   const ready = new Promise((resolve) => rl.on("line", (line) => (line === "READY" ? resolve() : line.startsWith("EVENT") && events.push(line))));
@@ -59,11 +66,11 @@ await gtk.ready;
 await settle(1500);
 
 const home = mkdtempSync(path.join(tmpdir(), "kmr-app-e2e-"));
-const env = { ...process.env, XDG_CONFIG_HOME: home, XDG_DATA_DIRS: "/usr/local/share:/usr/share", KMR_APP_HIDDEN: "0" };
+const env = { ...process.env, XDG_CONFIG_HOME: home, APPDATA: home, XDG_DATA_DIRS: "/usr/local/share:/usr/share", KMR_APP_HIDDEN: "0" };
 for (const k of ["GSETTINGS_SCHEMA_DIR", "GTK_PATH", "GTK_EXE_PREFIX", "GIO_MODULE_DIR", "ELECTRON_RUN_AS_NODE"]) delete env[k];
 const app = await electron.launch({
   executablePath: require("electron"),
-  args: [ROOT, "--no-sandbox", `--user-data-dir=${path.join(home, "userdata")}`],
+  args: [ROOT, ...(process.platform === "linux" ? ["--no-sandbox"] : []), `--user-data-dir=${path.join(home, "userdata")}`],
   env,
 });
 const page = await app.firstWindow();

@@ -38,8 +38,10 @@ Test data uses `e2e-owner-*@example.com` accounts; `make clean-test-data` remove
 
 ## Known limits
 
-- **Windows is untested.** The Windows backend (`platforms/windows_uia.py`) follows the same interface but
-  was never run on Windows. Only its pure role mapping is tested.
+- **Windows is written but not yet run on Windows.** The Windows backend (`platforms/windows_uia.py`) was written
+  against the `uiautomation` library's source and its logic is tested on Linux with a faithful fake. A live test that
+  drives a real Windows Forms window exists, runs on a Windows machine (GitHub workflow or `WINDOWS.md` step 4) and has
+  not been run yet. See `WINDOWS.md`.
 - **No on-screen highlight yet.** On Wayland an app cannot draw over other windows at an exact position and
   the accessibility bus gives window-relative positions, so "Show me where" describes the element in words.
 - **No keyboard shortcuts or raw mouse movement.** Other programs cannot be sent keystrokes on Wayland. Actions
@@ -50,3 +52,8 @@ Test data uses `e2e-owner-*@example.com` accounts; `make clean-test-data` remove
 - The dev command runs Electron with `--no-sandbox` because the SUID sandbox helper is not installed. A packaged
   installer must set it up. No installer is built yet.
 - The token is stored in `~/.config/kmr-desktop/config.json` (mode 600), not in an OS keyring.
+
+## Install
+
+- Ubuntu: `./install-ubuntu.sh`, then start "KMR Assistant" from the menu or `./run.sh`. See `UBUNTU.md`.
+- Windows: see `WINDOWS.md`.

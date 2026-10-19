@@ -5,14 +5,51 @@
   "description": "KMR AI desktop assistant: the chat window",
   "main": "main.js",
   "scripts": {
-    "start": "electron . --no-sandbox",
+    "start": "node scripts/start.js",
     "test": "vitest run",
-    "test:e2e": "node test/e2e.mjs"
+    "test:e2e": "node test/e2e.mjs",
+    "dist:win": "electron-builder --win nsis --publish never",
+    "dist:linux": "electron-builder --linux AppImage --publish never"
   },
   "devDependencies": {
     "electron": "43.4.1",
     "jsdom": "^26.0.0",
     "playwright-core": "^1.55.0",
     "vitest": "^3.0.0"
+  },
+  "build": {
+    "appId": "ai.kmr.assistant",
+    "productName": "KMR Assistant",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "lib/**",
+      "renderer/**",
+      "assets/**",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "../agent/dist/kmr-agent.exe",
+        "to": "kmr-agent.exe"
+      }
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "assets/icon.png",
+      "category": "Utility"
+    }
   }
 }

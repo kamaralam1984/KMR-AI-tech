@@ -94,6 +94,8 @@ function createTray() {
   }
 }
 
+// Lets Windows group the taskbar button and own the start-at-login entry under one identity.
+if (process.platform === "win32") app.setAppUserModelId("ai.kmr.assistant");
 app.on("second-instance", showWindow);
 if (!app.requestSingleInstanceLock()) {
   app.quit();

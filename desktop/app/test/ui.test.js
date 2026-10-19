@@ -8,7 +8,7 @@ const require = createRequire(import.meta.url);
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const { STRINGS } = require("../renderer/strings.js");
 const L = require("../renderer/logic.js");
-const { allowed } = require("../lib/agent_process.js");
+const { allowed, agentCommand } = require("../lib/agent_process.js");
 const autostart = require("../lib/autostart.js");
 
 describe("strings", () => {
@@ -146,5 +146,35 @@ describe("the window is locked down", () => {
     expect(main).toMatch(/background !== false/);
     expect(main).toMatch(/second-instance/);
     expect(main).toMatch(/requestSingleInstanceLock/);
+  });
+});
+
+
+describe("how the agent is started", () => {
+  it("uses the agent shipped with an installed app when there is one, else the checkout's Python", () => {
+    const resources = mkdtempSync(path.join(tmpdir(), "kmr-res-"));
+    const bundled = path.join(resources, process.platform === "win32" ? "kmr-agent.exe" : "kmr-agent");
+    process.resourcesPath = resources;
+    const checkout = agentCommand(ROOT);
+    expect(checkout.args).toEqual(["-m", "kmr_desktop", "run"]); // nothing bundled yet
+    require("node:fs").writeFileSync(bundled, "");
+    const installed = agentCommand(ROOT);
+    expect(installed.command).toBe(bundled);
+    expect(installed.args).toEqual(["run"]);
+    delete process.resourcesPath;
+  });
+
+  it("never starts the agent through a shell and hides the console window on Windows", () => {
+    const source = readFileSync(path.join(ROOT, "lib", "agent_process.js"), "utf8");
+    expect(source).toMatch(/windowsHide: true/);
+    expect(source).not.toMatch(/shell:\s*true|exec\(/);
+  });
+});
+
+describe("the start script", () => {
+  it("adds --no-sandbox only on Linux", () => {
+    const source = readFileSync(path.join(ROOT, "scripts", "start.js"), "utf8");
+    expect(source).toMatch(/process\.platform === "linux"/);
+    expect(JSON.parse(readFileSync(path.join(ROOT, "package.json"), "utf8")).scripts.start).toBe("node scripts/start.js");
   });
 });

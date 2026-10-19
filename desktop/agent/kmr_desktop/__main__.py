@@ -23,6 +23,9 @@ def make_platform():  # type: ignore[no-untyped-def]
 
 
 def main(argv: list[str] | None = None) -> int:
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8")  # Windows consoles default to a legacy code page
     parser = argparse.ArgumentParser(prog="kmr_desktop")
     sub = parser.add_subparsers(dest="cmd", required=True)
     run = sub.add_parser("run", help="start the agent (used by the desktop app)")

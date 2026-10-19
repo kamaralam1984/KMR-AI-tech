@@ -1,5 +1,8 @@
+# Which dependencies may run install scripts. Electron's downloads its binary; esbuild checks its own.
+# pnpm 11 reads allowBuilds; pnpm 10 reads onlyBuiltDependencies. Both are kept so either works.
 allowBuilds:
-  esbuild: set this to true or false
+  electron: true
+  esbuild: true
 onlyBuiltDependencies:
   - electron
   - esbuild

@@ -2,7 +2,7 @@
 BACKEND_PY := backend/.venv/bin
 PY ?= python3
 
-.PHONY: ext-test ext-e2e learning-eval audit backup help setup up down db-init dev-api dev-web lint typecheck test build format check smoke e2e clean-test-data benchmark worker scanner-up scanner-down scanner-check
+.PHONY: ext-test ext-e2e ext-demo learning-eval audit backup help setup up down db-init dev-api dev-web lint typecheck test build format check smoke e2e clean-test-data benchmark worker scanner-up scanner-down scanner-check
 
 help: ## Show this help
 	@grep -E '^[a-z-]+:.*##' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  %-10s %s\n", $$1, $$2}'
@@ -92,3 +92,6 @@ ext-test: ## Test the Chrome extension (uses the frontend's vitest; run `make se
 
 ext-e2e: ## Real-Chromium test of the extension against the local API (needs `make up`, db-init and `make dev-api`)
 	cd backend && PYTHONPATH=. .venv/bin/python ../extension/e2e/run_e2e.py
+
+ext-demo: ## Set up a throwaway account, project, token and test page to try the extension by hand in Chrome
+	cd backend && PYTHONPATH=. .venv/bin/python ../extension/e2e/demo.py

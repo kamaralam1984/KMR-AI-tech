@@ -82,7 +82,9 @@ class Handler(BaseHTTPRequestHandler):
 
 def find_chromium() -> str | None:
     """Playwright's own Chromium. Branded Chrome (137+) ignores --load-extension."""
-    found = sorted((Path.home() / ".cache" / "ms-playwright").glob("chromium-*/chrome-linux*/chrome"))
+    found = sorted(
+        (Path.home() / ".cache" / "ms-playwright").glob("chromium-*/chrome-linux*/chrome")
+    )
     return str(found[-1]) if found else None
 
 
@@ -104,7 +106,9 @@ def api_session() -> tuple[httpx.Client, str, str, str]:
     csrf = client.get("/v1/auth/csrf").json()["csrf_token"]
     client.headers["X-CSRF-Token"] = csrf
     org = client.post("/v1/organizations", json={"name": "E2E ext"}).json()["id"]
-    project = client.post(f"/v1/organizations/{org}/projects", json={"name": "Fixture"}).json()["id"]
+    project = client.post(f"/v1/organizations/{org}/projects", json={"name": "Fixture"}).json()[
+        "id"
+    ]
     token = client.post(
         f"/v1/organizations/{org}/extension-tokens", json={"name": "e2e", "days": 1}
     ).json()["token"]
@@ -212,8 +216,14 @@ def main() -> int:
             page.bring_to_front()
             step("activating")
             on = activate()
-            check("agent turns on for an ordinary page", on.get("ok") and not on.get("blocked"), str(on))
-            before = page.evaluate("[...document.querySelectorAll('input,textarea')].map(e=>e.value)")
+            check(
+                "agent turns on for an ordinary page",
+                on.get("ok") and not on.get("blocked"),
+                str(on),
+            )
+            before = page.evaluate(
+                "[...document.querySelectorAll('input,textarea')].map(e=>e.value)"
+            )
             step("analyzing")
             done = tab_message(site, {"type": "kmr:analyze", "projectId": project})
             check("analysis completes", done.get("blocked") is False, str(done))
@@ -221,7 +231,11 @@ def main() -> int:
             host = page.locator("kmr-ai-agent")
             check("overlay is on the page", host.count() == 1)
             panel_text = page.locator("kmr-ai-agent .panel").inner_text()
-            check("panel lists findings and says nothing was changed", "Nothing was changed" in panel_text, panel_text[:120])
+            check(
+                "panel lists findings and says nothing was changed",
+                "Nothing was changed" in panel_text,
+                panel_text[:120],
+            )
             check("findings say built-in rules, not AI", "Built-in rules (not AI)" in panel_text)
 
             hero = page.locator("#hero").bounding_box()
@@ -229,9 +243,19 @@ def main() -> int:
             matched = False
             for i in range(boxes.count()):
                 b = boxes.nth(i).bounding_box()
-                if b and abs(b["x"] - hero["x"]) < 2 and abs(b["y"] - hero["y"]) < 2 and abs(b["width"] - hero["width"]) < 2 and abs(b["height"] - hero["height"]) < 2:
+                if (
+                    b
+                    and abs(b["x"] - hero["x"]) < 2
+                    and abs(b["y"] - hero["y"]) < 2
+                    and abs(b["width"] - hero["width"]) < 2
+                    and abs(b["height"] - hero["height"]) < 2
+                ):
                     matched = True
-            check("a highlight sits exactly on the image that has no alt text", matched, f"hero={hero}")
+            check(
+                "a highlight sits exactly on the image that has no alt text",
+                matched,
+                f"hero={hero}",
+            )
 
             show = page.locator("kmr-ai-agent button", has_text="Show on page")
             check("each finding has a Show button", show.count() >= 1)
@@ -247,10 +271,20 @@ def main() -> int:
                 page.wait_for_timeout(1000)  # the cursor glides for 0.6 s
                 cursor = page.locator("kmr-ai-agent .cursor").bounding_box()
                 cx, cy = hero["x"] + hero["width"] / 2, hero["y"] + hero["height"] / 2
-                check("the agent cursor moved to the image", cursor is not None and abs(cursor["x"] - cx) < 3 and abs(cursor["y"] - cy) < 3, f"cursor={cursor} want=({cx},{cy})")
+                check(
+                    "the agent cursor moved to the image",
+                    cursor is not None and abs(cursor["x"] - cx) < 3 and abs(cursor["y"] - cy) < 3,
+                    f"cursor={cursor} want=({cx},{cy})",
+                )
             page_events = [e for e in page.evaluate("window.__events") if "KMR-AI-AGENT" not in e]
-            check("the page saw no click, input, key or submit from the agent", page_events == [], str(page_events))
-            after = page.evaluate("[...document.querySelectorAll('input,textarea')].map(e=>e.value)")
+            check(
+                "the page saw no click, input, key or submit from the agent",
+                page_events == [],
+                str(page_events),
+            )
+            after = page.evaluate(
+                "[...document.querySelectorAll('input,textarea')].map(e=>e.value)"
+            )
             check("no field value changed", before == after)
 
             # ------------------------------------------------------------- what the server got
@@ -261,12 +295,21 @@ def main() -> int:
                 ).fetchone()
                 check("the server stored one extension scan", scan is not None)
                 scan_id = scan[0]
-                rows = conn.execute("SELECT kind, data::text FROM observations WHERE scan_id = %s", (scan_id,)).fetchall()
+                rows = conn.execute(
+                    "SELECT kind, data::text FROM observations WHERE scan_id = %s", (scan_id,)
+                ).fetchall()
                 blob = " ".join(r[1] for r in rows)
                 leaked = [s for s in PII if s in blob]
-                check("none of the fake personal data reached the database", not leaked, str(leaked))
-                check("redaction placeholders are what was stored", "[EMAIL]" in blob and "[PHONE]" in blob)
-                evidence = conn.execute("SELECT storage_key, size_bytes FROM evidence WHERE scan_id = %s", (scan_id,)).fetchone()
+                check(
+                    "none of the fake personal data reached the database", not leaked, str(leaked)
+                )
+                check(
+                    "redaction placeholders are what was stored",
+                    "[EMAIL]" in blob and "[PHONE]" in blob,
+                )
+                evidence = conn.execute(
+                    "SELECT storage_key, size_bytes FROM evidence WHERE scan_id = %s", (scan_id,)
+                ).fetchone()
             check("a screenshot was stored", evidence is not None)
             if evidence is None:
                 probe = worker.evaluate(
@@ -301,10 +344,19 @@ def main() -> int:
                     {"bytes": data, "points": []},
                 )
                 scale = res["w"] / 1280
+
                 def center(sel: str) -> list[float]:
                     b = page.locator(sel).bounding_box()
                     return [(b["x"] + b["width"] / 2) * scale, (b["y"] + b["height"] / 2) * scale]
-                points = [center("#n"), center("input[name=contact]"), center("textarea"), center("#pii"), [1270 * scale, 700 * scale], center("h1")]
+
+                points = [
+                    center("#n"),
+                    center("input[name=contact]"),
+                    center("textarea"),
+                    center("#pii"),
+                    [1270 * scale, 700 * scale],
+                    center("h1"),
+                ]
                 res = shot.evaluate(
                     """async ({bytes, points}) => {
                         const bmp = await createImageBitmap(new Blob([new Uint8Array(bytes)], {type: 'image/png'}));
@@ -317,34 +369,77 @@ def main() -> int:
                 black = lambda px: sum(px) < 30  # noqa: E731
                 check("screenshot: the name field is blacked out", black(res[0]), str(res[0]))
                 check("screenshot: the email field is blacked out", black(res[1]), str(res[1]))
-                check("screenshot: the text area with a card number is blacked out", black(res[2]), str(res[2]))
-                check("screenshot: the paragraph with a phone number is blacked out", black(res[3]), str(res[3]))
-                check("screenshot: an empty part of the page is NOT blacked out", not black(res[4]), str(res[4]))
-                check("screenshot: the heading area is not blacked out", not black(res[5]) , str(res[5]))
+                check(
+                    "screenshot: the text area with a card number is blacked out",
+                    black(res[2]),
+                    str(res[2]),
+                )
+                check(
+                    "screenshot: the paragraph with a phone number is blacked out",
+                    black(res[3]),
+                    str(res[3]),
+                )
+                check(
+                    "screenshot: an empty part of the page is NOT blacked out",
+                    not black(res[4]),
+                    str(res[4]),
+                )
+                check(
+                    "screenshot: the heading area is not blacked out",
+                    not black(res[5]),
+                    str(res[5]),
+                )
 
             # ------------------------------------------------------------ pages it must refuse
             with psycopg.connect(dsn) as conn:
-                count_before = conn.execute("SELECT count(*) FROM scans WHERE project_id = %s", (project,)).fetchone()[0]
+                count_before = conn.execute(
+                    "SELECT count(*) FROM scans WHERE project_id = %s", (project,)
+                ).fetchone()[0]
             login = context.new_page()
             login.goto(site + "/login")
             login.bring_to_front()
             refused = activate()
-            check("a /login address is refused before anything is injected", refused.get("blocked") is True, str(refused))
+            check(
+                "a /login address is refused before anything is injected",
+                refused.get("blocked") is True,
+                str(refused),
+            )
             login_panel = login.locator("kmr-ai-agent .panel").inner_text()
-            check("the /login page shows 'Not reading this page'", "Not reading this page" in login_panel, login_panel[:100])
-            check("the page-world hook was not installed on the /login page", login.evaluate("typeof window.__kmrAgentHook") == "undefined")
+            check(
+                "the /login page shows 'Not reading this page'",
+                "Not reading this page" in login_panel,
+                login_panel[:100],
+            )
+            check(
+                "the page-world hook was not installed on the /login page",
+                login.evaluate("typeof window.__kmrAgentHook") == "undefined",
+            )
             pw = context.new_page()
             pw.goto(site + "/pw")
             pw.bring_to_front()
             refused2 = activate()
-            check("a page with a password field is refused", refused2.get("blocked") is True, str(refused2))
+            check(
+                "a page with a password field is refused",
+                refused2.get("blocked") is True,
+                str(refused2),
+            )
             result = tab_message(site + "/pw", {"type": "kmr:analyze", "projectId": project})
             check("analysis on it sends nothing", result.get("blocked") is True)
             panel = pw.locator("kmr-ai-agent .panel").inner_text()
-            check("it tells the user it is not reading the page", "Not reading this page" in panel, panel[:100])
+            check(
+                "it tells the user it is not reading the page",
+                "Not reading this page" in panel,
+                panel[:100],
+            )
             with psycopg.connect(dsn) as conn:
-                count_after = conn.execute("SELECT count(*) FROM scans WHERE project_id = %s", (project,)).fetchone()[0]
-            check("no scan was created from refused pages", count_after == count_before, f"{count_before}->{count_after}")
+                count_after = conn.execute(
+                    "SELECT count(*) FROM scans WHERE project_id = %s", (project,)
+                ).fetchone()[0]
+            check(
+                "no scan was created from refused pages",
+                count_after == count_before,
+                f"{count_before}->{count_after}",
+            )
         finally:
             context.close()
             server.shutdown()

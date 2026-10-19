@@ -7,13 +7,18 @@
 (function () {
   "use strict";
   if (window.__kmrAgentHook) return;
-  Object.defineProperty(window, "__kmrAgentHook", { value: true, enumerable: false });
+  Object.defineProperty(window, "__kmrAgentHook", {
+    value: true,
+    enumerable: false,
+  });
   let sent = 0;
   const emit = (payload) => {
     if (sent >= 60) return;
     sent += 1;
     try {
-      window.dispatchEvent(new CustomEvent("kmr-agent-log", { detail: JSON.stringify(payload) }));
+      window.dispatchEvent(
+        new CustomEvent("kmr-agent-log", { detail: JSON.stringify(payload) }),
+      );
     } catch (e) {
       /* never break the page */
     }
@@ -31,19 +36,33 @@
       return original.apply(this, arguments);
     };
   }
-  window.addEventListener("error", (e) => emit({ type: "page_error", message: e.message || "Error" }));
+  window.addEventListener("error", (e) =>
+    emit({ type: "page_error", message: e.message || "Error" }),
+  );
   window.addEventListener("unhandledrejection", (e) =>
-    emit({ type: "page_error", message: "Unhandled promise rejection: " + text([e.reason]) }),
+    emit({
+      type: "page_error",
+      message: "Unhandled promise rejection: " + text([e.reason]),
+    }),
   );
 
   const originalFetch = window.fetch;
   if (typeof originalFetch === "function") {
     window.fetch = function (input, init) {
-      const url = typeof input === "string" ? input : (input && input.url) || String(input);
+      const url =
+        typeof input === "string"
+          ? input
+          : (input && input.url) || String(input);
       const method = (init && init.method) || (input && input.method) || "GET";
       return originalFetch.apply(this, arguments).then(
         (response) => {
-          if (!response.ok) emit({ type: "http", url, status: response.status, resource_type: "fetch" });
+          if (!response.ok)
+            emit({
+              type: "http",
+              url,
+              status: response.status,
+              resource_type: "fetch",
+            });
           return response;
         },
         (error) => {
@@ -56,8 +75,20 @@
   const open = XMLHttpRequest.prototype.open;
   XMLHttpRequest.prototype.open = function (method, url) {
     this.addEventListener("loadend", () => {
-      if (this.status >= 400) emit({ type: "http", url: String(url), status: this.status, resource_type: "xhr" });
-      else if (this.status === 0) emit({ type: "failed", url: String(url), method, failure: "network error" });
+      if (this.status >= 400)
+        emit({
+          type: "http",
+          url: String(url),
+          status: this.status,
+          resource_type: "xhr",
+        });
+      else if (this.status === 0)
+        emit({
+          type: "failed",
+          url: String(url),
+          method,
+          failure: "network error",
+        });
     });
     return open.apply(this, arguments);
   };

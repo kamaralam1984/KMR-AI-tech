@@ -256,6 +256,14 @@ Click or typing by the agent, form submission, auto-fix, other browsers, mobile.
 
 Status: first version built (owner approved on 2026-10-19). See `docs/EXTENSION.md` for what exists, how it was tested and its limits. Not tested in a real Chrome profile end to end.
 
+### Phase 14 — Desktop assistant (owner request 2026-10-19; Windows + Linux)
+
+A chat app installed on the computer (not in the browser) that looks at windows the user chooses when
+they press "Look now", answers, highlights, and with a fresh permission for every step can press or
+type in another app. Design, limits, hard refusals and platform status: `docs/DESKTOP.md`. It uses the
+accessibility interface, not screenshots, because screenshot content cannot be redacted reliably.
+The Phase 13 hard rules apply unchanged.
+
 ## 6. Open decisions (owner to answer before Phase 1)
 
 1. Stack confirmed as in section 3?

@@ -12,6 +12,7 @@ const SCRIPTS = [
   "src/sensitive.js",
   "src/collect.js",
   "src/payload.js",
+  "src/fixes.js",
   "src/overlay.js",
   "src/content.js",
 ];
@@ -26,7 +27,10 @@ const DEFAULTS = {
 };
 
 async function getSettings() {
-  return { ...DEFAULTS, ...(await chrome.storage.local.get(Object.keys(DEFAULTS))) };
+  return {
+    ...DEFAULTS,
+    ...(await chrome.storage.local.get(Object.keys(DEFAULTS))),
+  };
 }
 
 function publicSettings(s) {
@@ -45,16 +49,26 @@ async function activeTab() {
 
 async function activate() {
   const tab = await activeTab();
-  if (!tab || !tab.id || !tab.url) return { ok: false, message: "No page to look at." };
+  if (!tab || !tab.id || !tab.url)
+    return { ok: false, message: "No page to look at." };
   const settings = await getSettings();
   const reason = K.sensitive.addressReason(tab.url, settings.userBlocklist);
   if (reason) {
     // Inject only enough to say so; no collection code or hook runs on this page.
-    await chrome.scripting.executeScript({ target: { tabId: tab.id }, files: SCRIPTS });
-    await chrome.tabs.sendMessage(tab.id, { type: "kmr:configure", settings: publicSettings(settings) });
+    await chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      files: SCRIPTS,
+    });
+    await chrome.tabs.sendMessage(tab.id, {
+      type: "kmr:configure",
+      settings: publicSettings(settings),
+    });
     return { ok: true, blocked: true, reason };
   }
-  await chrome.scripting.executeScript({ target: { tabId: tab.id }, files: SCRIPTS });
+  await chrome.scripting.executeScript({
+    target: { tabId: tab.id },
+    files: SCRIPTS,
+  });
   await chrome.scripting.executeScript({
     target: { tabId: tab.id },
     files: ["src/hook.js"],
@@ -64,13 +78,20 @@ async function activate() {
     type: "kmr:configure",
     settings: publicSettings(settings),
   });
-  return { ok: true, blocked: !!(answer && answer.blocked), reason: answer && answer.reason };
+  return {
+    ok: true,
+    blocked: !!(answer && answer.blocked),
+    reason: answer && answer.reason,
+  };
 }
 
 async function maskScreenshot(dataUrl, rects, dpr) {
   const bitmap = await createImageBitmap(await (await fetch(dataUrl)).blob());
   const scale = Math.min(1, 1280 / bitmap.width);
-  const canvas = new OffscreenCanvas(Math.round(bitmap.width * scale), Math.round(bitmap.height * scale));
+  const canvas = new OffscreenCanvas(
+    Math.round(bitmap.width * scale),
+    Math.round(bitmap.height * scale),
+  );
   const ctx = canvas.getContext("2d");
   ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "#000";
@@ -93,15 +114,18 @@ async function maskScreenshot(dataUrl, rects, dpr) {
 }
 
 async function api(settings, path, body) {
-  const response = await fetch(`${settings.apiBase.replace(/\/$/, "")}${path}`, {
-    method: body === undefined ? "GET" : "POST",
-    headers: {
-      Authorization: `Bearer ${settings.token}`,
-      ...(body === undefined ? {} : { "Content-Type": "application/json" }),
+  const response = await fetch(
+    `${settings.apiBase.replace(/\/$/, "")}${path}`,
+    {
+      method: body === undefined ? "GET" : "POST",
+      headers: {
+        Authorization: `Bearer ${settings.token}`,
+        ...(body === undefined ? {} : { "Content-Type": "application/json" }),
+      },
+      body: body === undefined ? undefined : JSON.stringify(body),
+      credentials: "omit",
     },
-    body: body === undefined ? undefined : JSON.stringify(body),
-    credentials: "omit",
-  });
+  );
   let json = null;
   try {
     json = await response.json();
@@ -109,7 +133,9 @@ async function api(settings, path, body) {
     /* not JSON */
   }
   if (!response.ok) {
-    const message = (json && json.error && json.error.message) || `The server answered ${response.status}.`;
+    const message =
+      (json && json.error && json.error.message) ||
+      `The server answered ${response.status}.`;
     throw new Error(message);
   }
   return json;
@@ -118,7 +144,11 @@ async function api(settings, path, body) {
 async function send(message, sender) {
   const settings = await getSettings();
   if (!settings.apiBase || !settings.token || !settings.projectId) {
-    return { ok: false, message: "Set the server address, token and project in the extension options first." };
+    return {
+      ok: false,
+      message:
+        "Set the server address, token and project in the extension options first.",
+    };
   }
   const tab = sender.tab;
   if (!tab || !tab.url) return { ok: false, message: "No page to send." };
@@ -126,7 +156,8 @@ async function send(message, sender) {
   const reason = K.sensitive.addressReason(tab.url, settings.userBlocklist);
   if (reason) return { ok: false, message: `Not sent: ${reason}.` };
   const payload = message.payload;
-  if (!payload || payload.client.sensitive_page) return { ok: false, message: "Not sent: the page is sensitive." };
+  if (!payload || payload.client.sensitive_page)
+    return { ok: false, message: "Not sent: the page is sensitive." };
   payload.project_id = settings.projectId;
   if (new URL(tab.url).host !== new URL(payload.page_url).host) {
     return { ok: false, message: "Not sent: the page address changed." };
@@ -134,8 +165,14 @@ async function send(message, sender) {
   try {
     if (settings.includeScreenshot && message.wantsShot) {
       try {
-        const shot = await chrome.tabs.captureVisibleTab(tab.windowId, { format: "png" });
-        const masked = await maskScreenshot(shot, message.maskRects || [], message.dpr || 1);
+        const shot = await chrome.tabs.captureVisibleTab(tab.windowId, {
+          format: "png",
+        });
+        const masked = await maskScreenshot(
+          shot,
+          message.maskRects || [],
+          message.dpr || 1,
+        );
         if (masked) payload.screenshot_png_b64 = masked;
       } catch {
         // If masking is not certain to have worked, no screenshot is sent.
@@ -146,14 +183,19 @@ async function send(message, sender) {
     const result = await api(settings, `/ext/v1/analyze/${stored.scan_id}`, {});
     return { ok: true, result };
   } catch (error) {
-    return { ok: false, message: String(error && error.message ? error.message : error) };
+    return {
+      ok: false,
+      message: String(error && error.message ? error.message : error),
+    };
   }
 }
 
 chrome.runtime.onMessage.addListener((message, sender, reply) => {
   if (sender.id !== chrome.runtime.id) return false;
   if (message.type === "kmr:activate") {
-    activate().then(reply, (e) => reply({ ok: false, message: String(e.message || e) }));
+    activate().then(reply, (e) =>
+      reply({ ok: false, message: String(e.message || e) }),
+    );
     return true;
   }
   if (message.type === "kmr:send") {
@@ -164,7 +206,9 @@ chrome.runtime.onMessage.addListener((message, sender, reply) => {
     getSettings().then((s) => {
       // Only KMR AI's own issue pages can be opened from a finding.
       if (s.webBase && /^\/issues\/[0-9a-f-]{36}$/.test(String(message.path))) {
-        chrome.tabs.create({ url: s.webBase.replace(/\/$/, "") + message.path });
+        chrome.tabs.create({
+          url: s.webBase.replace(/\/$/, "") + message.path,
+        });
       }
       reply({ ok: true });
     });

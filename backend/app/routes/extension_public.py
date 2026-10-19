@@ -44,6 +44,7 @@ from app.extension.schemas import (
     EvidenceOut,
     ExtProjectOut,
     FindingOut,
+    FixTarget,
 )
 from app.extension.service import ExtensionIdentity, resolve_token
 from app.routes.issues import diagnose_scan, get_provider
@@ -72,23 +73,27 @@ FIELDS: dict[str, tuple[str, ...]] = {
 INFO_CHECKS = {"missing_viewport_meta", "heading_structure"}
 
 
-async def identity(
+async def authenticate(
     request: Request,
-    engine: AsyncEngine = Depends(get_engine),  # noqa: B008
-    limiter: RateLimiter = Depends(get_rate_limiter),  # noqa: B008
-    settings: Settings = Depends(get_settings),  # noqa: B008
+    engine: AsyncEngine,
+    limiter: RateLimiter,
+    kind: str,
+    per_minute: int,
 ) -> ExtensionIdentity:
+    """Bearer token to the user it acts as, for ONE kind of client. Re-checks membership."""
     header = request.headers.get("authorization", "")
     scheme, _, raw = header.partition(" ")
     if scheme.lower() != "bearer" or not raw or len(raw) > 200:
-        raise HTTPException(401, "An extension token is required.")
+        raise HTTPException(401, "A token is required.")
     found = await resolve_token(engine, raw.strip())
-    if found is None:
-        raise HTTPException(401, "The extension token is not valid, has expired or was revoked.")
+    if found is None or found.kind != kind:
+        raise HTTPException(
+            401, "The token is not valid, has expired, was revoked or is for another app."
+        )
     role = await get_role(engine, found.user_id, found.org_id)
     if role is None or not has_role(role, "member"):
         raise HTTPException(403, "This token's user can no longer work in this organization.")
-    if not await allow(limiter, f"ext:{found.token_id}", settings.ext_requests_per_minute, 60):
+    if not await allow(limiter, f"{kind}:{found.token_id}", per_minute, 60):
         raise HTTPException(429, "Too many requests. Please wait a minute.")
     async with tenant_session(engine, user_id=found.user_id, org_id=found.org_id) as db:
         await db.execute(
@@ -97,6 +102,17 @@ async def identity(
             .values(last_used_at=datetime.now(UTC))
         )
     return found
+
+
+async def identity(
+    request: Request,
+    engine: AsyncEngine = Depends(get_engine),  # noqa: B008
+    limiter: RateLimiter = Depends(get_rate_limiter),  # noqa: B008
+    settings: Settings = Depends(get_settings),  # noqa: B008
+) -> ExtensionIdentity:
+    return await authenticate(
+        request, engine, limiter, "extension", settings.ext_requests_per_minute
+    )
 
 
 def _clean_value(value: Any) -> Any:
@@ -375,6 +391,7 @@ async def analyze(
                     except ValueError:
                         continue
         selectors: dict[str, list[str]] = {}
+        checks: dict[str, str] = {}
         if obs_ids:
             rows = await db.execute(
                 select(Observation.id, Observation.data).where(
@@ -385,15 +402,20 @@ async def analyze(
                 found = [s for s in (data or {}).get("selectors", []) if SELECTOR.match(str(s))]
                 if found:
                     selectors[str(oid)] = found
+                    if (data or {}).get("check") in A11Y_CHECKS:
+                        checks[str(oid)] = str(data["check"])
         run = await db.scalar(select(DiagnosisRun).where(DiagnosisRun.id == result.run.id))
     findings = []
     for issue in issues:
         cited = [str(e.get("id")) for e in issue.evidence]
         picked: list[str] = []
+        targets: list[FixTarget] = []
         for eid in cited:
             for sel in selectors.get(eid, []):
                 if sel not in picked:
                     picked.append(sel)
+                    if eid in checks:
+                        targets.append(FixTarget(selector=sel, check=checks[eid]))
         findings.append(
             FindingOut(
                 issue_id=issue.id,
@@ -407,6 +429,7 @@ async def analyze(
                 inferred=[sanitize_text(h.get("text", ""), 300) for h in issue.hypotheses][:4],
                 unverified=[sanitize_text(u, 300) for u in issue.unverified][:4],
                 selectors=picked[:5],
+                fix_targets=targets[:5],
                 evidence_ids=cited[:10],
                 proposed_fix=sanitize_text(issue.proposed_fix, 400),
                 is_ai=bool(run and run.provider != "rules"),

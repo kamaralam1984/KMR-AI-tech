@@ -29,12 +29,14 @@ class Strict(BaseModel):
 class TokenIn(Strict):
     name: str = Field(min_length=1, max_length=100)
     days: int = Field(default=30, ge=1, le=90)
+    kind: Literal["extension", "desktop"] = "extension"
 
 
 class TokenOut(Strict):
     id: uuid.UUID
     name: str
     token_prefix: str
+    kind: str = "extension"
     user_id: uuid.UUID
     expires_at: datetime
     revoked: bool
@@ -98,6 +100,13 @@ class EvidenceOut(Strict):
     notice: str
 
 
+class FixTarget(Strict):
+    """One element a finding points at, and which structural check flagged it."""
+
+    selector: str
+    check: str
+
+
 class FindingOut(Strict):
     issue_id: uuid.UUID
     title: str
@@ -110,6 +119,7 @@ class FindingOut(Strict):
     inferred: list[str]
     unverified: list[str]
     selectors: list[str]
+    fix_targets: list[FixTarget] = []
     evidence_ids: list[str]
     proposed_fix: str
     is_ai: bool

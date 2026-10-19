@@ -23,6 +23,7 @@ def _out(t: ExtensionToken) -> TokenOut:
         id=t.id,
         name=t.name,
         token_prefix=t.token_prefix,
+        kind=t.kind,
         user_id=t.user_id,
         expires_at=t.expires_at,
         revoked=t.revoked_at is not None,
@@ -51,7 +52,7 @@ async def create_token(
     access: OrgAccess = Depends(org_access("member")),  # noqa: B008
     engine: AsyncEngine = Depends(get_engine),  # noqa: B008
 ) -> TokenCreatedOut:
-    raw, digest, prefix = new_token()
+    raw, digest, prefix = new_token(body.kind)
     now = datetime.now(UTC)
     async with tenant_session(engine, user_id=access.user.user_id, org_id=access.org_id) as db:
         active = (
@@ -59,6 +60,7 @@ async def create_token(
                 select(ExtensionToken.id).where(
                     ExtensionToken.org_id == access.org_id,
                     ExtensionToken.user_id == access.user.user_id,
+                    ExtensionToken.kind == body.kind,
                     ExtensionToken.revoked_at.is_(None),
                     ExtensionToken.expires_at > now,
                 )
@@ -74,6 +76,7 @@ async def create_token(
             name=body.name.strip(),
             token_hash=digest,
             token_prefix=prefix,
+            kind=body.kind,
             expires_at=now + timedelta(days=body.days),
             created_at=now,
         )
@@ -87,7 +90,7 @@ async def create_token(
             org_id=access.org_id,
             target_type="extension_token",
             target_id=token.id,
-            details={"days": body.days},
+            details={"days": body.days, "kind": body.kind},
         )
         out = _out(token)
     return TokenCreatedOut(**out.model_dump(), token=raw)

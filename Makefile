@@ -2,7 +2,7 @@
 BACKEND_PY := backend/.venv/bin
 PY ?= python3
 
-.PHONY: ext-test ext-e2e ext-e2e-chrome ext-demo learning-eval audit backup help setup up down db-init dev-api dev-web lint typecheck test build format check smoke e2e clean-test-data benchmark worker scanner-up scanner-down scanner-check
+.PHONY: desktop-setup desktop-run desktop-test desktop-e2e ext-test ext-e2e ext-e2e-chrome ext-demo learning-eval audit backup help setup up down db-init dev-api dev-web lint typecheck test build format check smoke e2e clean-test-data benchmark worker scanner-up scanner-down scanner-check
 
 help: ## Show this help
 	@grep -E '^[a-z-]+:.*##' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  %-10s %s\n", $$1, $$2}'
@@ -98,3 +98,17 @@ ext-e2e-chrome: ## Same as ext-e2e, but in your installed Google Chrome (headles
 
 ext-demo: ## Set up a throwaway account, project, token and test page to try the extension by hand in Chrome
 	cd backend && PYTHONPATH=. .venv/bin/python ../extension/e2e/demo.py
+
+desktop-setup: ## Create the agent's Python venv (uses system PyGObject for the accessibility bus) and install the app's packages
+	cd desktop/agent && /usr/bin/python3 -m venv --system-site-packages .venv && .venv/bin/pip install -q httpx pytest ruff mypy
+	cd desktop/app && pnpm install
+
+desktop-run: ## Start the desktop assistant window (Linux dev run)
+	cd desktop/app && pnpm start
+
+desktop-test: ## Test the desktop agent (pytest) and the chat window's logic (vitest)
+	cd desktop/agent && .venv/bin/ruff check . && .venv/bin/mypy kmr_desktop && .venv/bin/pytest -q
+	cd desktop/app && node_modules/.bin/vitest run
+
+desktop-e2e: ## Electron + real agent + real GTK window + the running API (needs `make dev-api`)
+	cd desktop/app && node test/e2e.mjs

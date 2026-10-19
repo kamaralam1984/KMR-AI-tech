@@ -15,19 +15,25 @@ describe("redaction, measured on the labeled set", () => {
   const clean = cases.filter((c) => c.expect === "unchanged");
 
   it("catches every case labeled as covered (a regression gate)", () => {
-    const misses = caught.filter((c) => leaked(c).length).map((c) => `${c.category}: ${c.text}`);
+    const misses = caught
+      .filter((c) => leaked(c).length)
+      .map((c) => `${c.category}: ${c.text}`);
     expect(misses).toEqual([]);
   });
 
   it("does not mangle ordinary text (false positives)", () => {
-    const changed = clean.filter((c) => redact.redactText(c.text) !== c.text).map((c) => c.text);
+    const changed = clean
+      .filter((c) => redact.redactText(c.text) !== c.text)
+      .map((c) => c.text);
     expect(changed).toEqual([]);
   });
 
   it("reports the honest miss rate, including the documented limits", () => {
     const missedKnown = known.filter((c) => leaked(c).length);
     const labeled = caught.length + known.length;
-    const missRate = (caught.filter((c) => leaked(c).length).length + missedKnown.length) / labeled;
+    const missRate =
+      (caught.filter((c) => leaked(c).length).length + missedKnown.length) /
+      labeled;
     // The known-miss cases are expected to leak (names in sentences, spelled-out numbers...). If
     // one starts being caught, the label should be updated, so this fails to prompt the change.
     const nowCaught = known.filter((c) => !leaked(c).length).map((c) => c.text);
@@ -47,7 +53,8 @@ const MARKERS = {
   "@@SLACK_TOKEN@@": "xo" + "xb-123456789012-abcdefghijklmnop",
   "@@GITHUB_PAT@@": "gh" + "p_abcdefghijklmnopqrstuvwxyz0123456789",
 };
-const expand = (text) => Object.entries(MARKERS).reduce((t, [k, v]) => t.split(k).join(v), text);
+const expand = (text) =>
+  Object.entries(MARKERS).reduce((t, [k, v]) => t.split(k).join(v), text);
 
 function measure(file) {
   const raw = require(file);
@@ -59,7 +66,9 @@ function measure(file) {
   const leakCases = set.filter((c) => c.expect === "leak");
   const missed = leakCases.filter((c) => leaked(c).length).map((c) => c.text);
   const changed = set
-    .filter((c) => c.expect === "unchanged" && redact.redactText(c.text) !== c.text)
+    .filter(
+      (c) => c.expect === "unchanged" && redact.redactText(c.text) !== c.text,
+    )
     .map((c) => c.text);
   return { total: leakCases.length, missed, changed };
 }
@@ -72,15 +81,18 @@ describe("held-out sets (written separately from the patterns)", () => {
     ["./redaction-heldout.json", 0, "tuned on"],
     ["./redaction-heldout-2.json", 1, "tuned on"],
     ["./redaction-heldout-3.json", 7, "measured once, not tuned"],
-  ])("%s: at most %i leaks, no false positives (%s)", (file, ceiling, label) => {
-    const m = measure(file);
-    console.log(
-      `redaction ${file}: ${m.missed.length}/${m.total} leak cases missed ` +
-        `(${((100 * m.missed.length) / m.total).toFixed(1)}%), ${m.changed.length} false positives [${label}]`,
-    );
-    expect(m.changed).toEqual([]);
-    expect(m.missed.length).toBeLessThanOrEqual(ceiling);
-  });
+  ])(
+    "%s: at most %i leaks, no false positives (%s)",
+    (file, ceiling, label) => {
+      const m = measure(file);
+      console.log(
+        `redaction ${file}: ${m.missed.length}/${m.total} leak cases missed ` +
+          `(${((100 * m.missed.length) / m.total).toFixed(1)}%), ${m.changed.length} false positives [${label}]`,
+      );
+      expect(m.changed).toEqual([]);
+      expect(m.missed.length).toBeLessThanOrEqual(ceiling);
+    },
+  );
 });
 
 describe("counts and urls", () => {
@@ -97,7 +109,9 @@ describe("counts and urls", () => {
       "https://user:pw@shop.example.com/orders/1234567890/view?token=abc&email=a@b.com#frag",
       counts,
     );
-    expect(out).toBe("https://shop.example.com/orders/:id/view?token=[V]&email=[V]");
+    expect(out).toBe(
+      "https://shop.example.com/orders/:id/view?token=[V]&email=[V]",
+    );
     expect(out).not.toMatch(/pw|abc|a@b\.com|frag|1234567890/);
   });
 

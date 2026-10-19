@@ -381,6 +381,9 @@ def test_analysis_returns_labeled_findings_with_the_selectors_to_highlight(
         "body > main > img:nth-of-type(2)",
     ]
     assert alt["web_path"].startswith("/issues/") and alt["observed"]
+    assert alt["fix_targets"] == [
+        {"selector": sel, "check": "images_missing_alt"} for sel in alt["selectors"]
+    ]
     assert "Nothing on your site" in body["notice"]
     # The issue exists in the normal issue list, so "Fix this" goes through the normal flow.
     listed = api.get(f"/v1/organizations/{org}/issues").json()

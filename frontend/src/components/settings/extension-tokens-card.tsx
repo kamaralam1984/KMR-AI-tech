@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CopyButton } from "@/components/ui/copy-button";
 import { TextField } from "@/components/ui/field";
+import { SelectField } from "@/components/ui/select";
 import { apiRequest } from "@/lib/client-api";
 import type { ExtensionToken } from "@/lib/types";
 
@@ -35,6 +36,7 @@ export function ExtensionTokensCard({
     const result = await apiRequest<{ token: string }>("POST", base, {
       name: String(data.get("name") ?? "").trim(),
       days: Number(data.get("days") ?? 30),
+      kind: String(data.get("kind") ?? "extension"),
     });
     setBusy(false);
     if (!result.ok) return setError(result.error.message);
@@ -52,8 +54,8 @@ export function ExtensionTokensCard({
 
   return (
     <Card
-      title="Browser extension"
-      description="The Chrome page agent reads a page you turn it on for, highlights problems and never clicks or types. Pages are redacted in your browser first. Only verified websites are accepted."
+      title="Browser extension and desktop assistant"
+      description="Tokens for the Chrome page agent (reads a page you turn it on for, only verified websites) and for the desktop assistant app (reads only the windows you choose when you press Look now). Both redact personal details on your computer first, and a token works only for the app it was made for."
     >
       <div className="flex flex-col gap-4">
         {error ? (
@@ -72,7 +74,7 @@ export function ExtensionTokensCard({
         <form
           onSubmit={create}
           noValidate
-          className="grid gap-3 sm:grid-cols-[1fr_8rem_auto] sm:items-end"
+          className="grid gap-3 sm:grid-cols-[1fr_12rem_8rem_auto] sm:items-end"
         >
           <TextField
             label="Token name"
@@ -81,6 +83,10 @@ export function ExtensionTokensCard({
             placeholder="My laptop"
             required
           />
+          <SelectField label="For" name="kind" defaultValue="extension">
+            <option value="extension">Browser extension</option>
+            <option value="desktop">Desktop assistant</option>
+          </SelectField>
           <TextField
             label="Valid for (days)"
             name="days"
@@ -108,6 +114,7 @@ export function ExtensionTokensCard({
                   <span className="min-w-0">
                     <span className="block font-medium break-words text-ink">{t.name}</span>
                     <span className="block text-xs text-muted">
+                      {t.kind === "desktop" ? "Desktop assistant" : "Browser extension"} ·{" "}
                       {t.token_prefix}… · expires {new Date(t.expires_at).toLocaleDateString()}
                       {t.last_used_at
                         ? ` · last used ${new Date(t.last_used_at).toLocaleDateString()}`

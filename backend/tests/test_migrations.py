@@ -30,6 +30,7 @@ EXPECTED_TABLES = {
     "learning_consents",
     "traffic_imports",
     "issue_exports",
+    "desk_steps",
     "kb_pages",
     "kb_chunks",
     "form_definitions",

@@ -27,9 +27,17 @@ describe("addresses that are never read", () => {
   });
 
   it("allows an ordinary page and honours the user's own additions", () => {
-    expect(sensitive.addressReason("https://shop.example.com/about")).toBeNull();
-    expect(sensitive.addressReason("https://shop.example.com/about", ["example.com"])).not.toBeNull();
-    expect(sensitive.addressReason("https://shop.example.com/about", ["other.org"])).toBeNull();
+    expect(
+      sensitive.addressReason("https://shop.example.com/about"),
+    ).toBeNull();
+    expect(
+      sensitive.addressReason("https://shop.example.com/about", [
+        "example.com",
+      ]),
+    ).not.toBeNull();
+    expect(
+      sensitive.addressReason("https://shop.example.com/about", ["other.org"]),
+    ).toBeNull();
   });
 });
 

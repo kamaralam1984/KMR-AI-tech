@@ -8,6 +8,8 @@ from redis.asyncio import Redis
 from app.assistant.cors import PublicCorsMiddleware
 from app.config import Settings, get_settings, validate_scan_settings
 from app.db.engine import create_engine
+from app.desktop.providers import AnthropicProvider as DeskAnthropic
+from app.desktop.providers import RulesProvider as DeskRules
 from app.diagnosis.anthropic_provider import AnthropicProvider
 from app.diagnosis.rules import RulesProvider
 from app.errors import register_exception_handlers
@@ -23,6 +25,7 @@ from app.routes import (
     auth,
     backend_evidence,
     dashboard,
+    desk_public,
     extension,
     extension_public,
     health,
@@ -64,6 +67,9 @@ def _lifespan(settings: Settings):  # type: ignore[no-untyped-def]
         app.state.api_transport = ProxyTransport(settings.scan_proxy_url)
         app.state.diagnosis_provider = (
             AnthropicProvider(settings) if settings.ai_provider == "anthropic" else RulesProvider()
+        )
+        app.state.desk_provider = (
+            DeskAnthropic(settings) if settings.ai_provider == "anthropic" else DeskRules()
         )
         app.state.repair_provider = make_repair_provider(settings)
         app.state.ownership_verifier = NetworkOwnershipVerifier(settings.scan_proxy_url)
@@ -133,6 +139,7 @@ def create_app() -> FastAPI:
         extension,
         extension_public,
         traffic,
+        desk_public,
     ):
         app.include_router(router.router)
     return app

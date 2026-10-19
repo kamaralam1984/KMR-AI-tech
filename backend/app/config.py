@@ -94,6 +94,8 @@ class Settings(BaseSettings):
     public_base_url: str = "http://localhost:3000"
     # Signs and checks the review sign-offs that gate `production_ready` for the learning module.
     signoff_secret: SecretStr | None = None
+    desk_chat_daily_per_org: int = Field(default=200, ge=1)
+    desk_requests_per_minute: int = Field(default=20, ge=1)
     ext_requests_per_minute: int = Field(default=30, ge=1)
     ext_ingests_per_hour: int = Field(default=60, ge=1)
     assistant_requests_per_minute_per_install: int = Field(default=120, ge=1)

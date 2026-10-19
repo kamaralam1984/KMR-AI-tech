@@ -11,12 +11,15 @@ from sqlalchemy.ext.asyncio import AsyncEngine
 from app.db.tenant import tenant_session
 
 TOKEN_PREFIX = "kmr_xt_"  # noqa: S105 - a public prefix, not a secret
+DESKTOP_PREFIX = "kmr_dt_"  # noqa: S105 - a public prefix, not a secret
+PREFIXES = {"extension": TOKEN_PREFIX, "desktop": DESKTOP_PREFIX}
 
 
-def new_token() -> tuple[str, bytes, str]:
+def new_token(kind: str = "extension") -> tuple[str, bytes, str]:
     """(plaintext shown once, sha256 digest stored, short prefix for display)."""
-    raw = TOKEN_PREFIX + secrets.token_urlsafe(32)
-    return raw, hash_token(raw), raw[: len(TOKEN_PREFIX) + 4]
+    prefix = PREFIXES[kind]
+    raw = prefix + secrets.token_urlsafe(32)
+    return raw, hash_token(raw), raw[: len(prefix) + 4]
 
 
 def hash_token(raw: str) -> bytes:
@@ -28,6 +31,7 @@ class ExtensionIdentity:
     token_id: uuid.UUID
     org_id: uuid.UUID
     user_id: uuid.UUID
+    kind: str = "extension"
 
 
 async def resolve_token(engine: AsyncEngine, raw: str) -> ExtensionIdentity | None:
@@ -37,4 +41,4 @@ async def resolve_token(engine: AsyncEngine, raw: str) -> ExtensionIdentity | No
         ).first()
     if row is None:
         return None
-    return ExtensionIdentity(row.token_id, row.org_id, row.user_id)
+    return ExtensionIdentity(row.token_id, row.org_id, row.user_id, row.kind)

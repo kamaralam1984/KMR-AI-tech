@@ -554,6 +554,7 @@ class ExtensionToken(Base):
     name: Mapped[str] = mapped_column(Text)
     token_hash: Mapped[bytes] = mapped_column(LargeBinary)
     token_prefix: Mapped[str] = mapped_column(Text)
+    kind: Mapped[str] = mapped_column(Text, default="extension")
     expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     revoked_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     last_used_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
@@ -610,3 +611,18 @@ class IssueExport(Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: datetime.now(UTC)
     )
+
+
+class DeskStep(Base):
+    __tablename__ = "desk_steps"
+
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True)
+    org_id: Mapped[uuid.UUID]
+    user_id: Mapped[uuid.UUID]
+    token_id: Mapped[uuid.UUID]
+    kind: Mapped[str] = mapped_column(Text)
+    outcome: Mapped[str | None] = mapped_column(Text)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=lambda: datetime.now(UTC)
+    )
+    reported_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))

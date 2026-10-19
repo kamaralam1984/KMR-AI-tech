@@ -1,553 +1,450 @@
 {
- "version": 2,
- "note": "Written AFTER the patterns were extended, to be run once and never tuned against. Includes hard cases on purpose (Hinglish, lowercase names, IPv6, UPI ids).",
- "cases": [
-  {
-   "expect": "leak",
-   "category": "name",
-   "text": "My name is Anil Chopra and I need help",
-   "must_not_contain": [
-    "Anil Chopra"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "name",
-   "text": "I am Pooja Menon from Kochi",
-   "must_not_contain": [
-    "Pooja Menon"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "name",
-   "text": "This is Gaurav Malhotra speaking",
-   "must_not_contain": [
-    "Gaurav Malhotra"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "name",
-   "text": "Order placed by Tanvi Deshpande",
-   "must_not_contain": [
-    "Tanvi Deshpande"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "name",
-   "text": "Priya Sharma booked a table for two",
-   "must_not_contain": [
-    "Priya Sharma"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "name",
-   "text": "Ask for Harpreet Kaur at the front desk",
-   "must_not_contain": [
-    "Harpreet Kaur"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "name",
-   "text": "Rahul ne bola ki form submit nahi hua",
-   "must_not_contain": [
-    "Rahul"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "name",
-   "text": "Mrs. Savitri Bai collected the certificate",
-   "must_not_contain": [
-    "Savitri Bai"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "name",
-   "text": "contact person: Naveen Prasad",
-   "must_not_contain": [
-    "Naveen Prasad"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "name",
-   "text": "Beneficiary - Lakshmi Narayanan",
-   "must_not_contain": [
-    "Lakshmi Narayanan"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "name",
-   "text": "rahul sharma called twice",
-   "must_not_contain": [
-    "rahul sharma"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "name",
-   "text": "Guardian Sanjay Mishra signed below",
-   "must_not_contain": [
-    "Sanjay Mishra"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "address",
-   "text": "Send it to 14/B, Lotus Apartments, Whitefield, Bengaluru",
-   "must_not_contain": [
-    "14/B",
-    "Lotus Apartments"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "address",
-   "text": "Office at 3rd floor, Tech Park, Hinjewadi",
-   "must_not_contain": [
-    "Tech Park"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "address",
-   "text": "Mera ghar 45 Nehru Nagar mein hai",
-   "must_not_contain": [
-    "45 Nehru Nagar"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "address",
-   "text": "Village Rampur, Post Dhanaura, District Amroha",
-   "must_not_contain": [
-    "Rampur"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "pin",
-   "text": "Delivery pin: 302017",
-   "must_not_contain": [
-    "302017"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "pin",
-   "text": "Area code 600042 is covered",
-   "must_not_contain": [
-    "600042"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "dob",
-   "text": "She was born 3rd July 1995",
-   "must_not_contain": [
-    "July 1995"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "dob",
-   "text": "Birth date: 07-03-1995",
-   "must_not_contain": [
-    "07-03-1995"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "dob",
-   "text": "Applicant DOB is 21 Jan 2001",
-   "must_not_contain": [
-    "21 Jan 2001"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "phone",
-   "text": "WhatsApp me on 98 76 54 32 10",
-   "must_not_contain": [
-    "98 76 54 32 10"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "phone",
-   "text": "Helpline +91-22-4000-1234 for you",
-   "must_not_contain": [
-    "4000-1234"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "phone",
-   "text": "landline 022 2345 6789",
-   "must_not_contain": [
-    "2345 6789"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "email",
-   "text": "Send to  support . team @ example . org  please",
-   "must_not_contain": [
-    "support . team"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "email",
-   "text": "user+tag@mail.example.com failed validation",
-   "must_not_contain": [
-    "user+tag@mail.example.com"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "id",
-   "text": "Voter ID ABC1234567",
-   "must_not_contain": [
-    "ABC1234567"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "id",
-   "text": "Driving licence DL-0420110149646",
-   "must_not_contain": [
-    "0420110149646"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "id",
-   "text": "GSTIN 27AAPFU0939F1ZV registered",
-   "must_not_contain": [
-    "27AAPFU0939F1ZV"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "id",
-   "text": "UPI id rahul@okhdfcbank",
-   "must_not_contain": [
-    "rahul@okhdfcbank"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "card",
-   "text": "Card ending 1111 expires 12/28 CVV 321",
-   "must_not_contain": [
-    "321"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "card",
-   "text": "4111-1111-1111-1111",
-   "must_not_contain": [
-    "4111-1111-1111-1111"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "token",
-   "text": "Use key AKIAIOSFODNN7EXAMPLE for access",
-   "must_not_contain": [
-    "AKIAIOSFODNN7EXAMPLE"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "token",
-   "text": "cookie: sid=a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6",
-   "must_not_contain": [
-    "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "token",
-   "text": "refresh_token: 1//0gAbCdEfGhIjKlMn",
-   "must_not_contain": [
-    "1//0gAbCdEfGhIjKlMn"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "otp",
-   "text": "Verification code 739204 sent",
-   "must_not_contain": [
-    "739204"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "otp",
-   "text": "One-time password: 8821",
-   "must_not_contain": [
-    "8821"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "user",
-   "text": "User ID: amit.k_1989",
-   "must_not_contain": [
-    "amit.k_1989"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "user",
-   "text": "Follow us @acmefashion_official",
-   "must_not_contain": [
-    "acmefashion_official"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "ip",
-   "text": "Blocked 2001:db8::ff00:42:8329 for abuse",
-   "must_not_contain": [
-    "2001:db8::ff00:42:8329"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "ip",
-   "text": "Server 192.168.1.15 refused",
-   "must_not_contain": [
-    "192.168.1.15"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "mixed",
-   "text": "Hello Sneha Rao (sneha.rao@corp.in), call 9812345670",
-   "must_not_contain": [
-    "Sneha Rao",
-    "sneha.rao@corp.in",
-    "9812345670"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "mixed",
-   "text": "Dear Parent, Aarav Kumar scored 82% - roll no 4412",
-   "must_not_contain": [
-    "Aarav Kumar"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "mixed",
-   "text": "Invoice for Ritu Agarwal, flat 12, Green Park, PIN 110016",
-   "must_not_contain": [
-    "Ritu Agarwal",
-    "flat 12",
-    "110016"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "medical",
-   "text": "Patient Mohan Lal diagnosed with diabetes",
-   "must_not_contain": [
-    "Mohan Lal"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "medical",
-   "text": "Aadhaar-linked mobile 9000011111",
-   "must_not_contain": [
-    "9000011111"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "hinglish",
-   "text": "Mera naam Kiran Joshi hai",
-   "must_not_contain": [
-    "Kiran Joshi"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "hinglish",
-   "text": "Mera number 9988001122 hai",
-   "must_not_contain": [
-    "9988001122"
-   ]
-  },
-  {
-   "expect": "leak",
-   "category": "hinglish",
-   "text": "Aapka OTP 552188 hai, kisi se share na karein",
-   "must_not_contain": [
-    "552188"
-   ]
-  },
-  {
-   "expect": "unchanged",
-   "category": "clean",
-   "text": "Free returns within 30 days",
-   "must_not_contain": []
-  },
-  {
-   "expect": "unchanged",
-   "category": "clean",
-   "text": "Download the app",
-   "must_not_contain": []
-  },
-  {
-   "expect": "unchanged",
-   "category": "clean",
-   "text": "Best sellers this week",
-   "must_not_contain": []
-  },
-  {
-   "expect": "unchanged",
-   "category": "clean",
-   "text": "Select your country",
-   "must_not_contain": []
-  },
-  {
-   "expect": "unchanged",
-   "category": "clean",
-   "text": "Pay later with EMI options",
-   "must_not_contain": []
-  },
-  {
-   "expect": "unchanged",
-   "category": "clean",
-   "text": "Customer reviews (1,204)",
-   "must_not_contain": []
-  },
-  {
-   "expect": "unchanged",
-   "category": "clean",
-   "text": "Track your order",
-   "must_not_contain": []
-  },
-  {
-   "expect": "unchanged",
-   "category": "clean",
-   "text": "Gift cards available",
-   "must_not_contain": []
-  },
-  {
-   "expect": "unchanged",
-   "category": "clean",
-   "text": "Open Monday to Saturday",
-   "must_not_contain": []
-  },
-  {
-   "expect": "unchanged",
-   "category": "clean",
-   "text": "Call us for a quote",
-   "must_not_contain": []
-  },
-  {
-   "expect": "unchanged",
-   "category": "clean",
-   "text": "Your session will expire in 5 minutes",
-   "must_not_contain": []
-  },
-  {
-   "expect": "unchanged",
-   "category": "clean",
-   "text": "Items in cart: 3",
-   "must_not_contain": []
-  },
-  {
-   "expect": "unchanged",
-   "category": "clean",
-   "text": "Subtotal 2,499",
-   "must_not_contain": []
-  },
-  {
-   "expect": "unchanged",
-   "category": "clean",
-   "text": "Shipping calculated at checkout",
-   "must_not_contain": []
-  },
-  {
-   "expect": "unchanged",
-   "category": "clean",
-   "text": "We use cookies to improve your experience",
-   "must_not_contain": []
-  },
-  {
-   "expect": "unchanged",
-   "category": "clean",
-   "text": "Error 500: internal server error",
-   "must_not_contain": []
-  },
-  {
-   "expect": "unchanged",
-   "category": "clean",
-   "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED",
-   "must_not_contain": []
-  },
-  {
-   "expect": "unchanged",
-   "category": "clean",
-   "text": "TypeError: undefined is not a function",
-   "must_not_contain": []
-  },
-  {
-   "expect": "unchanged",
-   "category": "clean",
-   "text": "Uncaught ReferenceError: foo is not defined",
-   "must_not_contain": []
-  },
-  {
-   "expect": "unchanged",
-   "category": "clean",
-   "text": "Add a photo of the product",
-   "must_not_contain": []
-  },
-  {
-   "expect": "unchanged",
-   "category": "clean",
-   "text": "Sort by price: low to high",
-   "must_not_contain": []
-  },
-  {
-   "expect": "unchanged",
-   "category": "clean",
-   "text": "Showing 1-20 of 340 results",
-   "must_not_contain": []
-  },
-  {
-   "expect": "unchanged",
-   "category": "clean",
-   "text": "Frequently asked questions",
-   "must_not_contain": []
-  },
-  {
-   "expect": "unchanged",
-   "category": "clean",
-   "text": "Return policy",
-   "must_not_contain": []
-  },
-  {
-   "expect": "unchanged",
-   "category": "clean",
-   "text": "Hello and welcome",
-   "must_not_contain": []
-  }
- ]
+  "version": 2,
+  "note": "Written AFTER the patterns were extended, to be run once and never tuned against. Includes hard cases on purpose (Hinglish, lowercase names, IPv6, UPI ids).",
+  "cases": [
+    {
+      "expect": "leak",
+      "category": "name",
+      "text": "My name is Anil Chopra and I need help",
+      "must_not_contain": ["Anil Chopra"]
+    },
+    {
+      "expect": "leak",
+      "category": "name",
+      "text": "I am Pooja Menon from Kochi",
+      "must_not_contain": ["Pooja Menon"]
+    },
+    {
+      "expect": "leak",
+      "category": "name",
+      "text": "This is Gaurav Malhotra speaking",
+      "must_not_contain": ["Gaurav Malhotra"]
+    },
+    {
+      "expect": "leak",
+      "category": "name",
+      "text": "Order placed by Tanvi Deshpande",
+      "must_not_contain": ["Tanvi Deshpande"]
+    },
+    {
+      "expect": "leak",
+      "category": "name",
+      "text": "Priya Sharma booked a table for two",
+      "must_not_contain": ["Priya Sharma"]
+    },
+    {
+      "expect": "leak",
+      "category": "name",
+      "text": "Ask for Harpreet Kaur at the front desk",
+      "must_not_contain": ["Harpreet Kaur"]
+    },
+    {
+      "expect": "leak",
+      "category": "name",
+      "text": "Rahul ne bola ki form submit nahi hua",
+      "must_not_contain": ["Rahul"]
+    },
+    {
+      "expect": "leak",
+      "category": "name",
+      "text": "Mrs. Savitri Bai collected the certificate",
+      "must_not_contain": ["Savitri Bai"]
+    },
+    {
+      "expect": "leak",
+      "category": "name",
+      "text": "contact person: Naveen Prasad",
+      "must_not_contain": ["Naveen Prasad"]
+    },
+    {
+      "expect": "leak",
+      "category": "name",
+      "text": "Beneficiary - Lakshmi Narayanan",
+      "must_not_contain": ["Lakshmi Narayanan"]
+    },
+    {
+      "expect": "leak",
+      "category": "name",
+      "text": "rahul sharma called twice",
+      "must_not_contain": ["rahul sharma"]
+    },
+    {
+      "expect": "leak",
+      "category": "name",
+      "text": "Guardian Sanjay Mishra signed below",
+      "must_not_contain": ["Sanjay Mishra"]
+    },
+    {
+      "expect": "leak",
+      "category": "address",
+      "text": "Send it to 14/B, Lotus Apartments, Whitefield, Bengaluru",
+      "must_not_contain": ["14/B", "Lotus Apartments"]
+    },
+    {
+      "expect": "leak",
+      "category": "address",
+      "text": "Office at 3rd floor, Tech Park, Hinjewadi",
+      "must_not_contain": ["Tech Park"]
+    },
+    {
+      "expect": "leak",
+      "category": "address",
+      "text": "Mera ghar 45 Nehru Nagar mein hai",
+      "must_not_contain": ["45 Nehru Nagar"]
+    },
+    {
+      "expect": "leak",
+      "category": "address",
+      "text": "Village Rampur, Post Dhanaura, District Amroha",
+      "must_not_contain": ["Rampur"]
+    },
+    {
+      "expect": "leak",
+      "category": "pin",
+      "text": "Delivery pin: 302017",
+      "must_not_contain": ["302017"]
+    },
+    {
+      "expect": "leak",
+      "category": "pin",
+      "text": "Area code 600042 is covered",
+      "must_not_contain": ["600042"]
+    },
+    {
+      "expect": "leak",
+      "category": "dob",
+      "text": "She was born 3rd July 1995",
+      "must_not_contain": ["July 1995"]
+    },
+    {
+      "expect": "leak",
+      "category": "dob",
+      "text": "Birth date: 07-03-1995",
+      "must_not_contain": ["07-03-1995"]
+    },
+    {
+      "expect": "leak",
+      "category": "dob",
+      "text": "Applicant DOB is 21 Jan 2001",
+      "must_not_contain": ["21 Jan 2001"]
+    },
+    {
+      "expect": "leak",
+      "category": "phone",
+      "text": "WhatsApp me on 98 76 54 32 10",
+      "must_not_contain": ["98 76 54 32 10"]
+    },
+    {
+      "expect": "leak",
+      "category": "phone",
+      "text": "Helpline +91-22-4000-1234 for you",
+      "must_not_contain": ["4000-1234"]
+    },
+    {
+      "expect": "leak",
+      "category": "phone",
+      "text": "landline 022 2345 6789",
+      "must_not_contain": ["2345 6789"]
+    },
+    {
+      "expect": "leak",
+      "category": "email",
+      "text": "Send to  support . team @ example . org  please",
+      "must_not_contain": ["support . team"]
+    },
+    {
+      "expect": "leak",
+      "category": "email",
+      "text": "user+tag@mail.example.com failed validation",
+      "must_not_contain": ["user+tag@mail.example.com"]
+    },
+    {
+      "expect": "leak",
+      "category": "id",
+      "text": "Voter ID ABC1234567",
+      "must_not_contain": ["ABC1234567"]
+    },
+    {
+      "expect": "leak",
+      "category": "id",
+      "text": "Driving licence DL-0420110149646",
+      "must_not_contain": ["0420110149646"]
+    },
+    {
+      "expect": "leak",
+      "category": "id",
+      "text": "GSTIN 27AAPFU0939F1ZV registered",
+      "must_not_contain": ["27AAPFU0939F1ZV"]
+    },
+    {
+      "expect": "leak",
+      "category": "id",
+      "text": "UPI id rahul@okhdfcbank",
+      "must_not_contain": ["rahul@okhdfcbank"]
+    },
+    {
+      "expect": "leak",
+      "category": "card",
+      "text": "Card ending 1111 expires 12/28 CVV 321",
+      "must_not_contain": ["321"]
+    },
+    {
+      "expect": "leak",
+      "category": "card",
+      "text": "4111-1111-1111-1111",
+      "must_not_contain": ["4111-1111-1111-1111"]
+    },
+    {
+      "expect": "leak",
+      "category": "token",
+      "text": "Use key AKIAIOSFODNN7EXAMPLE for access",
+      "must_not_contain": ["AKIAIOSFODNN7EXAMPLE"]
+    },
+    {
+      "expect": "leak",
+      "category": "token",
+      "text": "cookie: sid=a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6",
+      "must_not_contain": ["a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6"]
+    },
+    {
+      "expect": "leak",
+      "category": "token",
+      "text": "refresh_token: 1//0gAbCdEfGhIjKlMn",
+      "must_not_contain": ["1//0gAbCdEfGhIjKlMn"]
+    },
+    {
+      "expect": "leak",
+      "category": "otp",
+      "text": "Verification code 739204 sent",
+      "must_not_contain": ["739204"]
+    },
+    {
+      "expect": "leak",
+      "category": "otp",
+      "text": "One-time password: 8821",
+      "must_not_contain": ["8821"]
+    },
+    {
+      "expect": "leak",
+      "category": "user",
+      "text": "User ID: amit.k_1989",
+      "must_not_contain": ["amit.k_1989"]
+    },
+    {
+      "expect": "leak",
+      "category": "user",
+      "text": "Follow us @acmefashion_official",
+      "must_not_contain": ["acmefashion_official"]
+    },
+    {
+      "expect": "leak",
+      "category": "ip",
+      "text": "Blocked 2001:db8::ff00:42:8329 for abuse",
+      "must_not_contain": ["2001:db8::ff00:42:8329"]
+    },
+    {
+      "expect": "leak",
+      "category": "ip",
+      "text": "Server 192.168.1.15 refused",
+      "must_not_contain": ["192.168.1.15"]
+    },
+    {
+      "expect": "leak",
+      "category": "mixed",
+      "text": "Hello Sneha Rao (sneha.rao@corp.in), call 9812345670",
+      "must_not_contain": ["Sneha Rao", "sneha.rao@corp.in", "9812345670"]
+    },
+    {
+      "expect": "leak",
+      "category": "mixed",
+      "text": "Dear Parent, Aarav Kumar scored 82% - roll no 4412",
+      "must_not_contain": ["Aarav Kumar"]
+    },
+    {
+      "expect": "leak",
+      "category": "mixed",
+      "text": "Invoice for Ritu Agarwal, flat 12, Green Park, PIN 110016",
+      "must_not_contain": ["Ritu Agarwal", "flat 12", "110016"]
+    },
+    {
+      "expect": "leak",
+      "category": "medical",
+      "text": "Patient Mohan Lal diagnosed with diabetes",
+      "must_not_contain": ["Mohan Lal"]
+    },
+    {
+      "expect": "leak",
+      "category": "medical",
+      "text": "Aadhaar-linked mobile 9000011111",
+      "must_not_contain": ["9000011111"]
+    },
+    {
+      "expect": "leak",
+      "category": "hinglish",
+      "text": "Mera naam Kiran Joshi hai",
+      "must_not_contain": ["Kiran Joshi"]
+    },
+    {
+      "expect": "leak",
+      "category": "hinglish",
+      "text": "Mera number 9988001122 hai",
+      "must_not_contain": ["9988001122"]
+    },
+    {
+      "expect": "leak",
+      "category": "hinglish",
+      "text": "Aapka OTP 552188 hai, kisi se share na karein",
+      "must_not_contain": ["552188"]
+    },
+    {
+      "expect": "unchanged",
+      "category": "clean",
+      "text": "Free returns within 30 days",
+      "must_not_contain": []
+    },
+    {
+      "expect": "unchanged",
+      "category": "clean",
+      "text": "Download the app",
+      "must_not_contain": []
+    },
+    {
+      "expect": "unchanged",
+      "category": "clean",
+      "text": "Best sellers this week",
+      "must_not_contain": []
+    },
+    {
+      "expect": "unchanged",
+      "category": "clean",
+      "text": "Select your country",
+      "must_not_contain": []
+    },
+    {
+      "expect": "unchanged",
+      "category": "clean",
+      "text": "Pay later with EMI options",
+      "must_not_contain": []
+    },
+    {
+      "expect": "unchanged",
+      "category": "clean",
+      "text": "Customer reviews (1,204)",
+      "must_not_contain": []
+    },
+    {
+      "expect": "unchanged",
+      "category": "clean",
+      "text": "Track your order",
+      "must_not_contain": []
+    },
+    {
+      "expect": "unchanged",
+      "category": "clean",
+      "text": "Gift cards available",
+      "must_not_contain": []
+    },
+    {
+      "expect": "unchanged",
+      "category": "clean",
+      "text": "Open Monday to Saturday",
+      "must_not_contain": []
+    },
+    {
+      "expect": "unchanged",
+      "category": "clean",
+      "text": "Call us for a quote",
+      "must_not_contain": []
+    },
+    {
+      "expect": "unchanged",
+      "category": "clean",
+      "text": "Your session will expire in 5 minutes",
+      "must_not_contain": []
+    },
+    {
+      "expect": "unchanged",
+      "category": "clean",
+      "text": "Items in cart: 3",
+      "must_not_contain": []
+    },
+    {
+      "expect": "unchanged",
+      "category": "clean",
+      "text": "Subtotal 2,499",
+      "must_not_contain": []
+    },
+    {
+      "expect": "unchanged",
+      "category": "clean",
+      "text": "Shipping calculated at checkout",
+      "must_not_contain": []
+    },
+    {
+      "expect": "unchanged",
+      "category": "clean",
+      "text": "We use cookies to improve your experience",
+      "must_not_contain": []
+    },
+    {
+      "expect": "unchanged",
+      "category": "clean",
+      "text": "Error 500: internal server error",
+      "must_not_contain": []
+    },
+    {
+      "expect": "unchanged",
+      "category": "clean",
+      "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED",
+      "must_not_contain": []
+    },
+    {
+      "expect": "unchanged",
+      "category": "clean",
+      "text": "TypeError: undefined is not a function",
+      "must_not_contain": []
+    },
+    {
+      "expect": "unchanged",
+      "category": "clean",
+      "text": "Uncaught ReferenceError: foo is not defined",
+      "must_not_contain": []
+    },
+    {
+      "expect": "unchanged",
+      "category": "clean",
+      "text": "Add a photo of the product",
+      "must_not_contain": []
+    },
+    {
+      "expect": "unchanged",
+      "category": "clean",
+      "text": "Sort by price: low to high",
+      "must_not_contain": []
+    },
+    {
+      "expect": "unchanged",
+      "category": "clean",
+      "text": "Showing 1-20 of 340 results",
+      "must_not_contain": []
+    },
+    {
+      "expect": "unchanged",
+      "category": "clean",
+      "text": "Frequently asked questions",
+      "must_not_contain": []
+    },
+    {
+      "expect": "unchanged",
+      "category": "clean",
+      "text": "Return policy",
+      "must_not_contain": []
+    },
+    {
+      "expect": "unchanged",
+      "category": "clean",
+      "text": "Hello and welcome",
+      "must_not_contain": []
+    }
+  ]
 }

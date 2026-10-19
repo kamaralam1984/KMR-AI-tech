@@ -2,7 +2,7 @@
 
 A Chrome extension (Manifest V3) that looks at **one tab you turn it on for**, highlights problems on
 the page with boxes and a separate visible "KMR AI" cursor, and sends only **redacted** page data to
-KMR AI for analysis. **This version only looks.** It does not click, type, submit or change the page.
+KMR AI for analysis. **It does not click, type or submit on the page.** Its only way to change anything is "Preview fix" (below), which edits one attribute in this tab's copy of the page after you allow that one element.
 "Fix this" opens the issue in the KMR AI web app, where the normal repair, check, diff-bound approval
 and verification flow applies.
 
@@ -13,6 +13,24 @@ and verification flow applies.
 3. Extension options: server address (API), web address, token, **Load my projects**, choose a project.
    Only projects whose website you have **verified** are listed.
 4. Open the site, click the extension icon, **Turn on for this tab**, then **Analyze this page**.
+
+## Preview fix (new): the pointer applies a fix, only with your permission
+
+On a finding the agent can preview (image without alt text, field/button/link without a name, missing
+page language or title), **Preview fix** does this, one element at a time:
+
+1. The KMR AI cursor glides to the element and a box asks: *Allow KMR AI to change this element?* It
+   says exactly what it will do and that it is **this tab only**. Nothing has changed yet.
+2. You write the text yourself (for example the label). The agent never invents it. Only a real click on
+   **Allow** counts: a click that the page's own script fabricates is ignored (tested in real Chrome).
+3. The cursor "presses" (a drawn ring; no click event exists), the one attribute or the page title is set,
+   the box turns green, and the panel re-checks the same condition locally. **Undo** restores it exactly;
+   turning the agent off or reloading removes every preview.
+
+What it is not: it does **not** change your real website or code (a browser tab cannot), sends nothing
+to the server, and never clicks buttons, types into fields, submits or changes a field's value. The
+permanent fix is **Fix this in KMR AI**: a branch, the exact diff, checks, and your approval. Problems
+with no safe preview (heading structure, sideways overflow, missing viewport tag) get no preview button.
 
 ## What the four hard rules mean in practice
 

@@ -12,6 +12,7 @@ const token = {
   id: "t1",
   name: "Laptop",
   token_prefix: "kmr_xt_ab12",
+  kind: "extension" as const,
   user_id: "u1",
   expires_at: "2099-01-01T00:00:00Z",
   revoked: false,
@@ -37,9 +38,25 @@ describe("ExtensionTokensCard", () => {
     expect(apiRequest).toHaveBeenCalledWith("POST", "/organizations/o/extension-tokens", {
       name: "Work PC",
       days: 30,
+      kind: "extension",
     });
     expect(await screen.findByText("kmr_xt_SECRETVALUE")).toBeInTheDocument();
     expect(screen.getByText(/will not be shown again/)).toBeInTheDocument();
+  });
+
+  it("can create a token for the desktop assistant, and says which app each token is for", async () => {
+    apiRequest.mockResolvedValue({ ok: true, data: { token: "kmr_dt_VALUE" } });
+    render(<ExtensionTokensCard orgId="o" tokens={[{ ...token, kind: "desktop" }]} />);
+    expect(screen.getByText(/Desktop assistant · kmr_xt_ab12/)).toBeInTheDocument();
+    await userEvent.type(screen.getByLabelText(/Token name/), "Laptop app");
+    await userEvent.selectOptions(screen.getByLabelText("For"), "desktop");
+    await userEvent.click(screen.getByRole("button", { name: "Create token" }));
+    expect(apiRequest).toHaveBeenCalledWith("POST", "/organizations/o/extension-tokens", {
+      name: "Laptop app",
+      days: 30,
+      kind: "desktop",
+    });
+    expect(await screen.findByText("kmr_dt_VALUE")).toBeInTheDocument();
   });
 
   it("explains a refusal in plain words", async () => {

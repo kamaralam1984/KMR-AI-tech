@@ -232,8 +232,8 @@ def main() -> int:
     (ext_dir / "manifest.json").write_text(json.dumps(manifest))
     overlay = ext_dir / "src" / "overlay.js"
     text = overlay.read_text()
-    assert '{ mode = "closed" }' in text
-    overlay.write_text(text.replace('{ mode = "closed" }', '{ mode = "open" }'))
+    assert 'mode = "closed"' in text
+    overlay.write_text(text.replace('mode = "closed"', 'mode = "open"'))
 
     with sync_playwright() as p:
         if use_chrome:
@@ -380,6 +380,116 @@ def main() -> int:
                 "[...document.querySelectorAll('input,textarea')].map(e=>e.value)"
             )
             check("no field value changed", before == after)
+
+            # ------------------------------------------------ "Preview fix": allowed per element
+            with psycopg.connect(dsn) as conn:
+                scans_before = conn.execute(
+                    "SELECT count(*) FROM scans WHERE project_id = %s", (project,)
+                ).fetchone()[0]
+            hero_el = page.locator("#hero")
+            check(
+                "before any permission the image has no alt attribute",
+                hero_el.get_attribute("alt") is None,
+            )
+            card = page.locator("kmr-ai-agent .finding", has_text="Images without alternative text")
+            card.locator("button", has_text="Preview fix").click()
+            ask = page.locator("kmr-ai-agent .ask")
+            check(
+                "it asks first and says it changes only this tab",
+                "in this tab only" in ask.inner_text(),
+                ask.inner_text()[:120],
+            )
+            check("asking changes nothing on the page", hero_el.get_attribute("alt") is None)
+            page.locator("kmr-ai-agent .ask input").fill("Support team photo")
+            # A click fabricated by the page's own script must not count as the user's permission.
+            page.evaluate(
+                """() => { const root = document.querySelector('kmr-ai-agent').shadowRoot;
+                    [...root.querySelectorAll('button')].find((b) => b.textContent === 'Allow').click(); }"""
+            )
+            page.wait_for_timeout(1500)
+            check(
+                "a script-made click does NOT grant permission",
+                hero_el.get_attribute("alt") is None,
+            )
+            page.locator("kmr-ai-agent .ask button", has_text="Allow").click()  # a real click
+            page.wait_for_function(
+                "document.querySelector('#hero').getAttribute('alt') !== null", timeout=8000
+            )
+            check(
+                "after a real click the typed text is applied",
+                hero_el.get_attribute("alt") == "Support team photo",
+            )
+            cur = page.locator("kmr-ai-agent .cursor").bounding_box()
+            hb = page.locator("#hero").bounding_box()
+            check(
+                "the pointer was on the image when it applied",
+                abs(cur["x"] - (hb["x"] + hb["width"] / 2)) < 4
+                and abs(cur["y"] - (hb["y"] + hb["height"] / 2)) < 4,
+                f"cursor={cur} hero={hb}",
+            )
+            applied = page.locator("kmr-ai-agent .panel").inner_text()
+            check(
+                "it says Done (preview) and that the real website is unchanged",
+                "Done (preview)" in applied and "real website is unchanged" in applied,
+            )
+            check("the highlight turned green", page.locator("kmr-ai-agent .box.done").count() >= 1)
+            check(
+                "no field value changed during the preview",
+                before
+                == page.evaluate(
+                    "[...document.querySelectorAll('input,textarea')].map(e=>e.value)"
+                ),
+            )
+            page_events = [e for e in page.evaluate("window.__events") if "KMR-AI-AGENT" not in e]
+            check(
+                "the page still saw no click, input or submit from the agent",
+                page_events == [],
+                str(page_events),
+            )
+            page.locator("kmr-ai-agent .panel button", has_text="Undo").click()
+            check("Undo puts the page back exactly", hero_el.get_attribute("alt") is None)
+            with psycopg.connect(dsn) as conn:
+                scans_after = conn.execute(
+                    "SELECT count(*) FROM scans WHERE project_id = %s", (project,)
+                ).fetchone()[0]
+            check(
+                "a preview sends nothing to the server",
+                scans_before == scans_after,
+                f"{scans_before}->{scans_after}",
+            )
+
+            # Two form fields: one permission each, then turning the agent off restores everything.
+            card2 = page.locator("kmr-ai-agent .finding", has_text="Form fields without a label")
+            card2.locator("button", has_text="Preview fix").click()
+            page.locator("kmr-ai-agent .ask input").fill("Contact email")
+            page.locator("kmr-ai-agent .ask button", has_text="Allow").click()
+            page.wait_for_selector(
+                "kmr-ai-agent .ask button:has-text('Next element')", timeout=8000
+            )
+            labelled = page.evaluate(
+                "[...document.querySelectorAll('input[aria-label],textarea[aria-label]')].length"
+            )
+            check("only the first field was changed so far", labelled == 1, str(labelled))
+            page.locator("kmr-ai-agent .ask button", has_text="Next element").click()
+            check(
+                "the next element asks again",
+                "(2 of" in page.locator("kmr-ai-agent .ask").inner_text(),
+            )
+            page.locator("kmr-ai-agent .ask button", has_text="Cancel").click()
+            control.evaluate(
+                with_timeout("""async (prefix) => {
+                    const tabs = await chrome.tabs.query({});
+                    const tab = tabs.find((t) => t.url && t.url.startsWith(prefix));
+                    return chrome.tabs.sendMessage(tab.id, {type: 'kmr:off'}); }"""),
+                site,
+            )
+            restored = page.evaluate("[...document.querySelectorAll('[aria-label]')].length")
+            check("turning the agent off restored the page", restored == 0, str(restored))
+            check("and removed the overlay", page.locator("kmr-ai-agent").count() == 0)
+            # Back on, so the rest of the run (server data, screenshot) is unaffected.
+            on_again = activate()
+            check("it can be turned on again", on_again.get("ok") is True)
+            tab_message(site, {"type": "kmr:analyze", "projectId": project})
 
             # ------------------------------------------------------------- what the server got
             with psycopg.connect(dsn) as conn:

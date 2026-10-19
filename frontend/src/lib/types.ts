@@ -440,6 +440,7 @@ export type ExtensionToken = {
   id: string;
   name: string;
   token_prefix: string;
+  kind: "extension" | "desktop";
   user_id: string;
   expires_at: string;
   revoked: boolean;

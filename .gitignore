@@ -38,3 +38,7 @@ playwright-report/
 
 # Database and evidence backups (contain customer data)
 backups/
+
+# desktop assistant
+desktop/agent/.venv/
+desktop/app/node_modules/

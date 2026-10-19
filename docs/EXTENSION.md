@@ -83,10 +83,28 @@ allow-list, the preview and the server's second check exist because of this.
 | Page changes after the preview | The send step builds from the same code; the background rejects an address that differs from the tab's |
 | Cross-tenant | Row-Level Security; a token only works for its own organization; analysis only for the uploader's own extension scans |
 
+## How it was tested in a real browser
+
+`make ext-e2e` drives Playwright's Chromium and `make ext-e2e-chrome` drives the installed Google Chrome
+(154 when tested) against the running local API and a local test site: 28 checks, all passing in both.
+They cover turning the agent on, the overlay, the highlight sitting exactly on the element, the cursor
+moving to it, no click/input/submit events and no changed field values, the stored data holding no fake
+personal data, the screenshot being blacked out where fields and personal-looking text are (pixel
+checks), and `/login` and password pages being refused with nothing sent.
+
+How the harness differs from a person using it (and nothing else): it grants the extension broad host
+access in a COPY of the manifest because the toolbar click (`activeTab`) and the options-page permission
+prompt cannot be clicked in an automated browser, and it opens the overlay's shadow root so the test can
+read it. Google Chrome 137+ ignores `--load-extension`, so the Chrome run loads the extension with the
+DevTools command `Extensions.loadUnpacked`, which is what "Load unpacked" does.
+
+Not tested: a person clicking the toolbar icon and the permission prompt; headed (windowed) Chrome on
+the development machine, which aborts at start-up with a GNOME settings-schema error unrelated to the
+extension. `make ext-demo` sets up a test page so you can do that by hand.
+
 ## Known limits
 
 - Chrome only, desktop, first version. Needs a manual load until it is published.
-- Not tested in a real Chrome profile end to end; behaviour is covered by jsdom tests and the server tests.
-  Screenshot masking runs in the service worker and has no automated test yet.
+- A person using the toolbar icon and the permission prompt has not been tested (see above).
 - Only verified-host pages of verified projects can be analyzed. Other sites get no cloud analysis.
 - Console and network capture start when you turn the agent on.

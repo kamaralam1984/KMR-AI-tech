@@ -2,6 +2,8 @@
 running local API and a local fixture site.
 
 Run:  make ext-e2e   (needs `make up`, `make db-init` and the API on :8000)
+      add `--chrome` for Google Chrome itself and `--headed` to watch it:
+      cd backend && PYTHONPATH=. .venv/bin/python ../extension/e2e/run_e2e.py --chrome --headed
 
 What is real here: the browser, the extension code, the service worker, captureVisibleTab, the HTTP
 calls to the API, the database and the stored screenshot file.
@@ -15,8 +17,11 @@ Test data uses e2e-owner-*@example.com, which `python -m app.db.clean_test_data`
 """
 
 import json
+import os
 import shutil
+import subprocess
 import sys
+import time
 import tempfile
 import threading
 import uuid
@@ -80,6 +85,71 @@ class Handler(BaseHTTPRequestHandler):
         pass
 
 
+def browser_env() -> dict[str, str]:
+    """A clean environment for the browser. Variables set by a snap-packaged editor (for example
+    GSETTINGS_SCHEMA_DIR) make desktop Chrome abort at start-up with a GLib settings error."""
+    drop = (
+        "GSETTINGS_SCHEMA_DIR",
+        "GIO_MODULE_DIR",
+        "GTK_PATH",
+        "GTK_EXE_PREFIX",
+        "GTK_IM_MODULE_FILE",
+    )
+    env = {k: v for k, v in os.environ.items() if k not in drop and not k.startswith("SNAP")}
+    env["GSETTINGS_BACKEND"] = "memory"
+    return env
+
+
+def find_chrome() -> str | None:
+    """Google Chrome itself. Chrome 137+ ignores --load-extension unless this feature flag is set."""
+    return shutil.which("google-chrome") or shutil.which("google-chrome-stable")
+
+
+def launch_chrome(p, chrome: str, ext_dir: Path, work: Path, headed: bool):  # type: ignore[no-untyped-def]
+    """Google Chrome 137+ ignores --load-extension. The supported route is the DevTools command
+    Extensions.loadUnpacked (what "Load unpacked" does), which needs --enable-unsafe-extension-debugging.
+    Returns (context, stop)."""
+    port = 9333
+    args = [
+        chrome,
+        f"--user-data-dir={work / 'profile'}",
+        f"--remote-debugging-port={port}",
+        "--enable-unsafe-extension-debugging",
+        "--no-first-run",
+        "--no-default-browser-check",
+        "--password-store=basic",
+        "--window-size=1280,900",
+        *([] if headed else ["--headless=new"]),
+        "about:blank",
+    ]
+    proc = subprocess.Popen(  # noqa: S603 - fixed arguments
+        args, env=browser_env(), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+    )
+    for _ in range(80):
+        try:
+            httpx.get(f"http://127.0.0.1:{port}/json/version", timeout=1).raise_for_status()
+            break
+        except Exception:  # noqa: BLE001
+            if proc.poll() is not None:
+                raise SystemExit(
+                    "Chrome exited at start-up (see the note about headed Chrome)."
+                ) from None
+            time.sleep(0.25)
+    browser = p.chromium.connect_over_cdp(f"http://127.0.0.1:{port}")
+    session = browser.new_browser_cdp_session()
+    loaded = session.send("Extensions.loadUnpacked", {"path": str(ext_dir)})
+    step(f"Chrome loaded the extension: {loaded.get('id')}")
+    context = browser.contexts[0]
+
+    def stop() -> None:
+        try:
+            browser.close()
+        finally:
+            proc.terminate()
+
+    return context, stop, str(loaded.get("id"))
+
+
 def find_chromium() -> str | None:
     """Playwright's own Chromium. Branded Chrome (137+) ignores --load-extension."""
     found = sorted(
@@ -129,10 +199,17 @@ def main() -> int:
         print(f"Unavailable: the API is not reachable on {API} ({exc}).")
         return 2
 
-    chromium = find_chromium()
+    use_chrome = "--chrome" in sys.argv
+    headed = "--headed" in sys.argv
+    chromium = find_chrome() if use_chrome else find_chromium()
     if chromium is None:
-        print("Unavailable: no Playwright Chromium installed (run `playwright install chromium`).")
+        print(
+            "Unavailable: Google Chrome is not installed."
+            if use_chrome
+            else "Unavailable: no Playwright Chromium installed (run `playwright install chromium`)."
+        )
         return 2
+    print(f"Browser: {chromium}" + (" (headed)" if headed else " (headless)"), flush=True)
 
     server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
     threading.Thread(target=server.serve_forever, daemon=True).start()
@@ -159,24 +236,40 @@ def main() -> int:
     overlay.write_text(text.replace('{ mode = "closed" }', '{ mode = "open" }'))
 
     with sync_playwright() as p:
-        context = p.chromium.launch_persistent_context(
-            str(work / "profile"),
-            executable_path=chromium,
-            headless=False,
-            ignore_default_args=["--disable-extensions"],
-            viewport={"width": 1280, "height": 720},
-            args=[
-                "--headless=new",
-                f"--disable-extensions-except={ext_dir}",
-                f"--load-extension={ext_dir}",
-            ],
-        )
-        try:
-            worker = (
-                context.service_workers[0]
-                if context.service_workers
-                else context.wait_for_event("serviceworker", timeout=20000)
+        if use_chrome:
+            context, stop_browser, loaded_id = launch_chrome(p, chromium, ext_dir, work, headed)
+        else:
+            context = p.chromium.launch_persistent_context(
+                str(work / "profile"),
+                executable_path=chromium,
+                headless=False,
+                ignore_default_args=["--disable-extensions"],
+                slow_mo=350 if headed else 0,
+                env=browser_env(),
+                viewport={"width": 1280, "height": 720},
+                args=[
+                    *([] if headed else ["--headless=new"]),
+                    f"--disable-extensions-except={ext_dir}",
+                    f"--load-extension={ext_dir}",
+                ],
             )
+            stop_browser = context.close
+            loaded_id = ""
+        try:
+
+            def ours(w) -> bool:  # type: ignore[no-untyped-def]
+                return w.url.startswith("chrome-extension://") and (
+                    not loaded_id or loaded_id in w.url
+                )
+
+            worker = next((w for w in context.service_workers if ours(w)), None)
+            if worker is None:
+                deadline = time.time() + 20
+                while worker is None and time.time() < deadline:
+                    context.pages[0].wait_for_timeout(300) if context.pages else time.sleep(0.3)
+                    worker = next((w for w in context.service_workers if ours(w)), None)
+            if worker is None:
+                raise SystemExit("The extension's service worker never started.")
             ext_id = worker.url.split("/")[2]
             worker.evaluate(
                 with_timeout("(cfg) => chrome.storage.local.set(cfg)"),
@@ -212,6 +305,7 @@ def main() -> int:
             # ---------------------------------------------------------------- the good page
             step("opening the fixture page")
             page = context.new_page()
+            page.set_viewport_size({"width": 1280, "height": 720})
             page.goto(site + "/")
             page.bring_to_front()
             step("activating")
@@ -441,7 +535,7 @@ def main() -> int:
                 f"{count_before}->{count_after}",
             )
         finally:
-            context.close()
+            stop_browser()
             server.shutdown()
             shutil.rmtree(work, ignore_errors=True)
 
